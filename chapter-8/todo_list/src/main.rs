@@ -1,6 +1,9 @@
 use std::io;
 use std::io::Write;
 
+mod tasks;
+use tasks::Task;
+
 enum Command {
     Add,
     Complete,
@@ -14,6 +17,14 @@ fn main() {
         "3" => Some(Command::List),
         _ => None,
     };
+
+    match choice {
+        None => println!("Error, invalid command. Please try again"),
+        _ => {
+            // TODO: Implement adding, completing and listing tasks
+            todo!();
+        }
+    }
 }
 
 // Print the commands and read the user's input
