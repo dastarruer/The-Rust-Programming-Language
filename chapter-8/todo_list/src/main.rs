@@ -1,8 +1,10 @@
 use std::io;
 use std::io::Write;
 
-mod tasks;
-use tasks::Task;
+mod task;
+mod task_manager;
+use task::Task;
+use task_manager::TaskManager;
 
 enum Command {
     Add,
@@ -19,9 +21,13 @@ fn main() {
     };
 
     match choice {
+        Some(Command::Add) => {
+            println!("Adding task...");
+            let task_manager = TaskManager::new("./tasks.json".to_string());
+        }
         None => println!("Error, invalid command. Please try again"),
         _ => {
-            // TODO: Implement adding, completing and listing tasks
+            // TODO: Implement completing and listing tasks
             todo!();
         }
     }
