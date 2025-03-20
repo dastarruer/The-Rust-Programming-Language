@@ -23,9 +23,10 @@ fn main() {
     match choice {
         Some(Command::Add) => {
             println!("Adding task...");
-            let task_manager = TaskManager::new("./tasks.json".to_string());
+            let mut task_manager = TaskManager::new("./tasks.json".to_string());
+            println!("{}", task_manager.tasks)
         }
-        None => println!("Error, invalid command. Please try again"),
+        None => eprintln!("Error, invalid command. Please try again"),
         _ => {
             // TODO: Implement completing and listing tasks
             todo!();
