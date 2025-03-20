@@ -3,7 +3,6 @@ use std::io::Write;
 
 mod task;
 mod task_manager;
-use task::Task;
 use task_manager::TaskManager;
 
 enum Command {
@@ -23,8 +22,8 @@ fn main() {
     match choice {
         Some(Command::Add) => {
             println!("Adding task...");
-            let mut task_manager = TaskManager::new("./tasks.json".to_string());
-            println!("{}", task_manager.tasks)
+            let task_manager = TaskManager::new("./tasks.json".to_string());
+            println!("{:?}", task_manager.tasks);
         }
         None => eprintln!("Error, invalid command. Please try again"),
         _ => {

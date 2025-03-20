@@ -1,11 +1,13 @@
 use std::fs;
 
+use crate::task::Task;
+
 pub struct TaskManager {
     // The file to which JSON data will be stored
     filename: String,
 
     // Stores the tasks JSON data
-    pub tasks: String,
+    pub tasks: Vec<Task>,
 }
 
 impl TaskManager {
@@ -13,7 +15,7 @@ impl TaskManager {
         let mut task_manager = TaskManager {
             filename,
             // Initialize as empty first
-            tasks: "".to_string(),
+            tasks: Vec::new(),
         };
         task_manager.load_tasks();
         task_manager
@@ -28,21 +30,24 @@ impl TaskManager {
 
         json.to_string()
     }
-    
+
     // Read tasks.json into self.tasks
     fn load_tasks(&mut self) {
         self.tasks = match fs::read_to_string(&self.filename) {
-            Ok(data) => {
-                match serde_json::from_str::<serde_json::Value>(&data) {
-                    Ok(_) => data,
+            Ok(content) => {
+                match serde_json::from_str::<Vec<Task>>(&content) {
+                    Ok(tasks) => tasks, // Successfully parsed tasks
                     Err(_) => {
-                        eprintln!("Unable to load data, file may be corrupt.");
-                        "{}".to_string() // Return default empty JSON
+                        eprintln!("Error, unable to load data; file may be corrupt.");
+                        Vec::new() // Return an empty vector if JSON is invalid
                     }
                 }
             }
-            // If an error is thrown because there is no tasks.json file, initialize tasks.json
-            Err(_) => self.init_tasks_file()
+            Err(_) => {
+                eprintln!("Tasks file not found, creating new one...");
+                self.init_tasks_file();
+                Vec::new() // Return an empty vector when file is created
+            }
         };
     }
 }
