@@ -22,7 +22,8 @@ fn main() {
     match choice {
         Some(Command::Add) => {
             println!("Adding task...");
-            let task_manager = TaskManager::new("./tasks.json".to_string());
+            let mut task_manager = TaskManager::new("./tasks.json".to_string());
+            task_manager.add_task();
             println!("{:?}", task_manager.tasks);
         }
         None => eprintln!("Error, invalid command. Please try again"),
