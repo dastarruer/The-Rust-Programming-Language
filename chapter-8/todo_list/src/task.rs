@@ -24,4 +24,8 @@ impl Task {
             status: Status::Incomplete,
         }
     }
+
+    pub fn print_task(&self) {
+        println!("{}\n{}", self.name, self.description);
+    }
 }
