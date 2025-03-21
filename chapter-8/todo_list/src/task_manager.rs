@@ -21,7 +21,7 @@ impl TaskManager {
         task_manager
     }
 
-    // Initialize tasks.JSON with an empty JSON object
+    // Initialize self.filename with an empty JSON object
     fn init_tasks_file(&self) -> String {
         println!("Tasks not found, initializing...");
 
@@ -31,7 +31,7 @@ impl TaskManager {
         json.to_string()
     }
 
-    // Read tasks.json into self.tasks
+    // Read self.filename into self.tasks
     fn load_tasks(&mut self) {
         self.tasks = match fs::read_to_string(&self.filename) {
             Ok(content) => {
@@ -51,6 +51,16 @@ impl TaskManager {
         };
     }
 
+    // Update self.filename with self.tasks
+    fn update_tasks(&self) {
+        // Convert self.tasks to JSON string
+        let json = serde_json::to_string_pretty(&self.tasks)
+            .expect("Error converting tasks to JSON, please try again.");
+
+        // Write JSON string to self.filename
+        fs::write(&self.filename, &json).expect("Error, railed to create file");
+    }
+
     pub fn add_task(&mut self) {
         let task = Task {
             name: "do thing".to_string(),
@@ -58,5 +68,6 @@ impl TaskManager {
             status: Status::Incomplete,
         };
         self.tasks.push(task);
+        self.update_tasks();
     }
 }
