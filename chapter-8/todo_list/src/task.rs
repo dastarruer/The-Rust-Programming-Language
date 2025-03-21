@@ -15,3 +15,13 @@ pub struct Task {
     pub description: String,
     pub status: Status,
 }
+
+impl Task {
+    pub fn new(name: String, description: String) -> Self {
+        Task {
+            name,
+            description,
+            status: Status::Incomplete,
+        }
+    }
+}

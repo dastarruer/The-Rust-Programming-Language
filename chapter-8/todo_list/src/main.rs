@@ -9,6 +9,7 @@ use task_manager::TaskManager;
 enum Command {
     Add,
     Complete,
+    Edit,
     List,
 }
 
@@ -16,13 +17,14 @@ fn main() {
     let mut task_manager = TaskManager::new("./tasks.json".to_string());
 
     // Get user command
-    let command = match get_input("Commands:\n1) Add task\n2) Complete task\n3) List tasks\n: ")
+    let command = match get_input("Commands:\n1) Add task\n2) Edit task\n3) Complete task\n3) List tasks\n: ")
         .parse::<u8>() // Cast to a uint so that the compiler doesn't get mad about comparing String to &str
         .ok()
     {
         Some(1) => Some(Command::Add),
-        Some(2) => Some(Command::Complete),
-        Some(3) => Some(Command::List),
+        Some(2) => Some(Command::Edit),
+        Some(3) => Some(Command::Complete),
+        Some(4) => Some(Command::List),
         _ => None,
     };
 
@@ -32,20 +34,15 @@ fn main() {
 
             let description = get_input("Task description (press enter to leave empty): ");
 
-            let task = Task {
-                name: name,
-                description: description,
-                status: Status::Incomplete,
-            };
-            
+            let task = Task::new(name, description);
+
             task_manager.add_task(task);
-            println!("{:?}", task_manager.tasks);
         }
+        Some(Command::List) => todo!(),
+        // TODO: Implement completing and editing tasks
+        Some(Command::Complete) => todo!(),
+        Some(Command::Edit) => todo!(),
         None => eprintln!("Error, invalid command. Please try again"),
-        _ => {
-            // TODO: Implement completing, listing and editing tasks
-            todo!();
-        }
     }
 }
 
