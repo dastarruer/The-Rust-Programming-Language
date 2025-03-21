@@ -14,39 +14,30 @@ enum Command {
 
 fn main() {
     let mut task_manager = TaskManager::new("./tasks.json".to_string());
-    let choice = match get_command().trim() {
-        "1" => Some(Command::Add),
-        "2" => Some(Command::Complete),
-        "3" => Some(Command::List),
+
+    // Get user command
+    let command = match get_input("Commands:\n1) Add task\n2) Complete task\n3) List tasks\n: ")
+        .parse::<u8>() // Cast to a uint so that the compiler doesn't get mad about comparing String to &str
+        .ok()
+    {
+        Some(1) => Some(Command::Add),
+        Some(2) => Some(Command::Complete),
+        Some(3) => Some(Command::List),
         _ => None,
     };
 
-    match choice {
+    match command {
         Some(Command::Add) => {
-            print!("Task name: ");
-            std::io::stdout()
-                .flush()
-                .expect("Error flushing stdout, please try again.");
-            let mut name = String::new();
-            io::stdin()
-                .read_line(&mut name)
-                .expect("Error reading input, please try again.");
+            let name = get_input("Task name: ");
 
-            print!("Task description: ");
-            std::io::stdout()
-                .flush()
-                .expect("Error flushing stdout, please try again.");
-
-            let mut description = String::new();
-            io::stdin()
-                .read_line(&mut description)
-                .expect("Error reading input, please try again.");
+            let description = get_input("Task description (press enter to leave empty): ");
 
             let task = Task {
-                name: name.trim().to_string(),
-                description: description.trim().to_string(),
+                name: name,
+                description: description,
                 status: Status::Incomplete,
             };
+            
             task_manager.add_task(task);
             println!("{:?}", task_manager.tasks);
         }
@@ -58,19 +49,17 @@ fn main() {
     }
 }
 
-// Print the commands and read the user's input
-fn get_command() -> String {
-    // Print commands
-    print!("Commands:\n1) Add task\n2) Mark task completed\n3) List tasks\n: ");
-    std::io::stdout()
+// Function to prompt user and read input
+fn get_input(prompt: &str) -> String {
+    print!("{}", prompt);
+    io::stdout()
         .flush()
         .expect("Error flushing stdout, please try again.");
 
-    // Read user input
     let mut input = String::new();
     io::stdin()
         .read_line(&mut input)
         .expect("Error reading input, please try again.");
 
-    input
+    input.trim().to_string()
 }
