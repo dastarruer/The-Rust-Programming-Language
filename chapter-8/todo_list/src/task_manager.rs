@@ -65,4 +65,11 @@ impl TaskManager {
         self.tasks.push(task);
         self.update_tasks();
     }
+
+    // List all of the user's tasks
+    pub fn list_tasks(&self) {
+        for task in &self.tasks  {
+            task.print_task();
+        }
+    }
 }

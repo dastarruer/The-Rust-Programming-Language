@@ -17,7 +17,7 @@ fn main() {
     let mut task_manager = TaskManager::new("./tasks.json".to_string());
 
     // Get user command
-    let command = match get_input("Commands:\n1) Add task\n2) Edit task\n3) Complete task\n3) List tasks\n: ")
+    let command = match get_input("Commands:\n1) Add task\n2) Edit task\n3) Complete task\n4) List tasks\n: ")
         .parse::<u8>() // Cast to a uint so that the compiler doesn't get mad about comparing String to &str
         .ok()
     {
@@ -38,7 +38,9 @@ fn main() {
 
             task_manager.add_task(task);
         }
-        Some(Command::List) => todo!(),
+        Some(Command::List) => {
+            task_manager.list_tasks();
+        },
         // TODO: Implement completing and editing tasks
         Some(Command::Complete) => todo!(),
         Some(Command::Edit) => todo!(),
