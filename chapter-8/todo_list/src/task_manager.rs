@@ -1,6 +1,6 @@
 use std::fs;
 
-use crate::task::{Status, Task};
+use crate::task::Task;
 
 pub struct TaskManager {
     // The file to which JSON data will be stored
@@ -61,12 +61,7 @@ impl TaskManager {
         fs::write(&self.filename, &json).expect("Error, railed to create file");
     }
 
-    pub fn add_task(&mut self) {
-        let task = Task {
-            name: "do thing".to_string(),
-            description: Some("the thing is important".to_string()),
-            status: Status::Incomplete,
-        };
+    pub fn add_task(&mut self, task: Task) {
         self.tasks.push(task);
         self.update_tasks();
     }

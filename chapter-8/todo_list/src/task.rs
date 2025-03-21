@@ -11,7 +11,7 @@ pub enum Status {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Task {
     pub name: String,
-    // Can be None
-    pub description: Option<String>,
+    // Can be an empty string if there is no description
+    pub description: String,
     pub status: Status,
 }
