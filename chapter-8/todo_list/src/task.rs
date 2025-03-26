@@ -11,7 +11,7 @@ pub enum Status {
 #[derive(Serialize, Deserialize, Debug)]
 pub struct Task {
     pub name: String,
-    // Can be an empty string if there is no description
+    // Some tasks will not have a description
     pub description: String,
     pub status: Status,
 }
@@ -26,6 +26,6 @@ impl Task {
     }
 
     pub fn print_task(&self) {
-        println!("{}\n{}", self.name, self.description);
+        println!("[{:?}] {} - {}", self.status, self.name, self.description);
     }
 }
