@@ -1,10 +1,12 @@
-use std::io;
-use std::io::Write;
-
 mod task;
 mod task_manager;
+
+mod utils;
+
 use task::Task;
 use task_manager::TaskManager;
+
+use utils::get_input;
 
 enum Command {
     Add,
@@ -52,19 +54,4 @@ fn main() {
         Some(Command::Edit) => todo!(),
         None => eprintln!("Error, invalid command. Please try again"),
     }
-}
-
-// Function to prompt user and read input
-fn get_input(prompt: &str) -> String {
-    print!("{}", prompt);
-    io::stdout()
-        .flush()
-        .expect("Error flushing stdout, please try again.");
-
-    let mut input = String::new();
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Error reading input, please try again.");
-
-    input.trim().to_string()
 }
