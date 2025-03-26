@@ -1,12 +1,10 @@
 mod task;
 mod task_manager;
-
 mod utils;
 
-use task::Task;
 use task_manager::TaskManager;
-
 use utils::get_input;
+
 
 enum Command {
     Add,
