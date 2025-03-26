@@ -12,12 +12,12 @@ pub enum Status {
 pub struct Task {
     pub name: String,
     // Some tasks will not have a description
-    pub description: String,
+    pub description: Option<String>,
     pub status: Status,
 }
 
 impl Task {
-    pub fn new(name: String, description: String) -> Self {
+    pub fn new(name: String, description: Option<String>) -> Self {
         Task {
             name,
             description,
@@ -26,6 +26,10 @@ impl Task {
     }
 
     pub fn print_task(&self) {
-        println!("[{:?}] {} - {}", self.status, self.name, self.description);
+        if let Some(desc) = &self.description {
+            println!("[{:?}] {} - {}", self.status, self.name, desc);
+        } else {
+            println!("[{:?}] {}", self.status, self.name);
+        }
     }
 }
