@@ -1,6 +1,6 @@
 use std::fs;
 
-use crate::task::Task;
+use crate::{task::Task, utils::get_input};
 
 pub struct TaskManager {
     // The file to which JSON data will be stored
@@ -61,14 +61,27 @@ impl TaskManager {
         fs::write(&self.filename, &json).expect("Error, railed to create file");
     }
 
-    pub fn add_task(&mut self, task: Task) {
+    pub fn add_task(&mut self) {
+        // Get the task name from the user
+        let name = get_input("Task name: ");
+
+        // Get the description from the user
+        let description = get_input("Task description (press enter to leave empty): ");
+        // Convert description to an Option
+        let description = match description.is_empty() {
+            true => None,
+            false => Some(description),
+        };
+
+        let task = Task::new(name, description);
+        
         self.tasks.push(task);
         self.update_tasks();
     }
 
     // List all of the user's tasks
     pub fn list_tasks(&self) {
-        for task in &self.tasks  {
+        for task in &self.tasks {
             task.print_task();
         }
     }

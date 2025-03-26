@@ -33,22 +33,8 @@ fn main() {
     };
 
     match command {
-        Some(Command::Add) => {
-            let name = get_input("Task name: ");
-
-            let description = get_input("Task description (press enter to leave empty): ");
-            let description = match description.is_empty() {
-                true => None,
-                false => Some(description),
-            };
-
-            let task = Task::new(name, description);
-
-            task_manager.add_task(task);
-        }
-        Some(Command::List) => {
-            task_manager.list_tasks();
-        }
+        Some(Command::Add) => task_manager.add_task(),
+        Some(Command::List) => task_manager.list_tasks(),
         // TODO: Implement completing and editing tasks
         Some(Command::Complete) => todo!(),
         Some(Command::Edit) => todo!(),
