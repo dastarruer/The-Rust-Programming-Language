@@ -97,7 +97,40 @@ impl TaskManager {
 
                 // Update filename.json
                 self.update_tasks();
-            },
+            }
+            Ok(_) => println!("Invalid number, out of range."),
+            Err(_) => println!("Invalid input, please enter a number."),
+        }
+    }
+
+    pub fn edit_tasks(&mut self) {
+        // List all tasks to the user
+        self.list_tasks();
+
+        // Get the task number the user wants to complete
+        let task = get_input("Input task to be edited: ");
+
+        match task.parse::<usize>() {
+            // Check if index is smaller than tasks.length to prevent going out of bounds
+            Ok(index) if index - 1 < self.tasks.len() => {
+                if let Some(task) = self.tasks.get_mut(index - 1) {
+                    let name = get_input("New task name (press enter to leave as is): ");
+                    let description =
+                        get_input("New task description (press enter to leave as is): ");
+
+                    if !name.is_empty() {
+                        task.name = name;
+                    }
+                    if !description.is_empty() {
+                        task.description = Some(description);
+                    }
+                } else {
+                    println!("Invalid index, task not found.");
+                }
+
+                // Update filename.json
+                self.update_tasks();
+            }
             Ok(_) => println!("Invalid number, out of range."),
             Err(_) => println!("Invalid input, please enter a number."),
         }
