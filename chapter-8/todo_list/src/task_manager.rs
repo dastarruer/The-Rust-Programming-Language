@@ -1,6 +1,9 @@
 use std::fs;
 
-use crate::{task::Task, utils::get_input};
+use crate::{
+    task::{Status, Task},
+    utils::get_input,
+};
 
 pub struct TaskManager {
     // The file to which JSON data will be stored
@@ -74,15 +77,36 @@ impl TaskManager {
         };
 
         let task = Task::new(name, description);
-        
+
         self.tasks.push(task);
         self.update_tasks();
+    }
+
+    pub fn complete_task(&mut self) {
+        // List all tasks to the user
+        self.list_tasks();
+
+        // Get the task number the user wants to complete
+        let task = get_input("Input task to be completed: ");
+
+        match task.parse::<usize>() {
+            // Check if index is smaller than tasks.length to prevent goin gout of bounds
+            Ok(index) if index - 1 < self.tasks.len() => {
+                // Set the task to complete
+                self.tasks[index - 1].status = Status::Complete;
+
+                // Update filename.json
+                self.update_tasks();
+            },
+            Ok(_) => println!("Invalid number, out of range."),
+            Err(_) => println!("Invalid input, please enter a number."),
+        }
     }
 
     // List all of the user's tasks
     pub fn list_tasks(&self) {
         for (i, task) in self.tasks.iter().enumerate() {
-            print!("{} - ", i + 1);
+            print!("#{} - ", i + 1);
             task.print_task();
         }
     }
