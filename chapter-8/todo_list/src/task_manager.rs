@@ -81,7 +81,8 @@ impl TaskManager {
 
     // List all of the user's tasks
     pub fn list_tasks(&self) {
-        for task in &self.tasks {
+        for (i, task) in self.tasks.iter().enumerate() {
+            print!("{} - ", i + 1);
             task.print_task();
         }
     }
