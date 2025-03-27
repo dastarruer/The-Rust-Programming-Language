@@ -33,7 +33,6 @@ fn main() {
     match command {
         Some(Command::Add) => task_manager.add_task(),
         Some(Command::List) => task_manager.list_tasks(),
-        // TODO: Implement editing tasks
         Some(Command::Complete) => task_manager.complete_task(),
         Some(Command::Edit) => task_manager.edit_tasks(),
         None => eprintln!("Error, invalid command. Please try again"),
