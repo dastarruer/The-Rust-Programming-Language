@@ -1,5 +1,7 @@
 use std::env;
+use std::io::Read;
 use std::process;
+use std::fs::File;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -9,12 +11,12 @@ fn main() {
         process::exit(1);
     });
 
-    println!("Filename: {}\nQuery: {}", config.filename, config.query);
+    run(config);
 }
 
 struct Config {
-    query: String,
     filename: String,
+    query: String,
 }
 
 impl Config {
@@ -23,8 +25,18 @@ impl Config {
             return Err("Not enough arguments.");
         }
         Ok(Config {
-            query: args[1].clone(),
-            filename: args[2].clone(),
+            filename: args[1].clone(),
+            query: args[2].clone(),
         })
     }
+}
+
+fn run(config: Config) {
+    println!("{}", config.filename);
+    let mut f = File::open(config.filename).expect("Unable to find {config.filename}");
+
+    let mut content = String::new();
+    f.read_to_string(&mut content).expect("Error reading file.");
+
+    println!("Content: {}", content);
 }
