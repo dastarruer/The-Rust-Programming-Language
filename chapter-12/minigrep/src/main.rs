@@ -38,5 +38,17 @@ fn run(config: Config) {
     let mut content = String::new();
     f.read_to_string(&mut content).expect("Error reading file.");
 
-    println!("Content: {}", content);
+    println!("{:?}", search(&config.query, &content));
 }
+
+fn search<'a>(query: &'a str, content: &'a str) -> Vec<&'a str> {
+    let mut results = Vec::new(); 
+    
+    for line in content.lines() {
+        if line.contains(query) {
+            results.push(line);
+        }
+    }
+
+    results
+} 
