@@ -1,9 +1,7 @@
-use std::io::Read;
 use std::fs::File;
+use std::io::Read;
 
-/**
-Stores the commandline arguments given by the user.
-*/
+/// Stores the commandline arguments given by the user.
 pub struct Config {
     query: String,
     filename: String,
@@ -26,18 +24,25 @@ impl Config {
 /// Run main logic
 pub fn run(config: Config) {
     println!("{}", config.filename);
-    let mut f = File::open(config.filename).expect("Unable to find {config.filename}");
-
-    let mut content = String::new();
-    f.read_to_string(&mut content).expect("Error reading file.");
+    let content = read_from_file(&config.filename);
 
     println!("{:?}", search(&config.query, &content));
 }
 
+/// Return file content
+fn read_from_file(filename: &str) -> String {
+    let mut f = File::open(filename).expect("Unable to find file, try again.");
+
+    let mut content = String::new();
+    f.read_to_string(&mut content).expect("Error reading file.");
+
+    content
+}
+
 /// Search for a word in a given file's content
 fn search<'a>(query: &'a str, content: &'a str) -> Vec<&'a str> {
-    let mut results = Vec::new(); 
-    
+    let mut results = Vec::new();
+
     // Go through each line
     for line in content.lines() {
         if line.contains(query) {
@@ -47,5 +52,4 @@ fn search<'a>(query: &'a str, content: &'a str) -> Vec<&'a str> {
     }
 
     results
-} 
-
+}
