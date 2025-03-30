@@ -61,3 +61,17 @@ fn print_results(results: Vec<&str>) {
         println!("{}", result);
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn one_result() {
+        let query = "duct";
+        let content = "Rust: \nsafe, fast, productive.\nPick three.
+        ";
+
+        assert_eq!(vec!["safe, fast, productive."], search(query, content))
+    }
+}
