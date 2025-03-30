@@ -15,8 +15,8 @@ fn main() {
 }
 
 struct Config {
-    filename: String,
     query: String,
+    filename: String,
 }
 
 impl Config {
@@ -25,8 +25,8 @@ impl Config {
             return Err("Not enough arguments.");
         }
         Ok(Config {
-            filename: args[1].clone(),
-            query: args[2].clone(),
+            query: args[1].clone(),
+            filename: args[2].clone(),
         })
     }
 }
