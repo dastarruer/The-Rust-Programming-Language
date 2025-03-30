@@ -12,6 +12,6 @@ fn main() {
         process::exit(1);
     });
 
-    run(config);
+    run(&config);
 }
 

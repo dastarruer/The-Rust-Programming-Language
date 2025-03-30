@@ -22,11 +22,13 @@ impl Config {
 }
 
 /// Run main logic
-pub fn run(config: Config) {
-    println!("{}", config.filename);
+pub fn run(config: &Config) {
+    // Read file content
     let content = read_from_file(&config.filename);
 
-    println!("{:?}", search(&config.query, &content));
+    // Search for word in file and print results
+    let results = search(&config.query, &content);
+    print_results(results);
 }
 
 /// Return file content
@@ -52,4 +54,10 @@ fn search<'a>(query: &'a str, content: &'a str) -> Vec<&'a str> {
     }
 
     results
+}
+
+fn print_results(results: Vec<&str>) {
+    for result in results.iter() {
+        println!("{}", result);
+    }
 }
