@@ -18,7 +18,10 @@ impl Config {
             return Err("Not enough arguments.");
         }
 
-        let queries = args[1..num_args - 1].iter().map(|s| s.to_string()).collect();
+        let queries = args[1..num_args - 1]
+            .iter()
+            .map(|s| s.to_string())
+            .collect();
         // TODO: Remove cloning here
         let filename = args[num_args - 1].clone();
 
@@ -43,7 +46,7 @@ pub fn run(config: &Config) {
     // Search for word in file and print results
     let results = match config.case_sensitive {
         true => search(query_refs, &content),
-        false => todo!(), //search_case_insensitive(query_refs, &content),
+        false => search_case_insensitive(query_refs, &content),
     };
     print_results(results);
 }
@@ -75,15 +78,17 @@ fn search<'a>(queries: Vec<&'a str>, content: &'a str) -> Vec<&'a str> {
     results
 }
 /// Search for a word in a given file's content, disregarding case
-fn search_case_insensitive<'a>(query: &'a str, content: &'a str) -> Vec<&'a str> {
-    let query = query.to_lowercase();
+fn search_case_insensitive<'a>(queries: Vec<&'a str>, content: &'a str) -> Vec<&'a str> {
+    let queries: Vec<_> = queries.into_iter().map(|s| s.to_lowercase()).collect();
     let mut results = Vec::new();
 
     // Go through each line
     for line in content.lines() {
-        if line.to_lowercase().contains(&query) {
-            // Add the line to the results
-            results.push(line);
+        for query in queries.iter() {
+            if line.to_lowercase().contains(query) {
+                // Add the line to the results
+                results.push(line);
+            }
         }
     }
 
@@ -110,13 +115,25 @@ mod test {
     }
 
     #[test]
-    fn case_insensitive() {
-        let query = "dUcT";
+    fn one_query_case_insensitive() {
+        let query = vec!["dUcT"];
         let content = "Rust: \nsafe, fast, productive.\nPick three.
         ";
 
         assert_eq!(
             vec!["safe, fast, productive."],
+            search_case_insensitive(query, content)
+        )
+    }
+
+    #[test]
+    fn multiple_queries_case_insensitive() {
+        let query = vec!["rUst", "dUcT"];
+        let content = "Rust: \nsafe, fast, productive.\nPick three.
+        ";
+
+        assert_eq!(
+            vec!["Rust: ", "safe, fast, productive."],
             search_case_insensitive(query, content)
         )
     }
