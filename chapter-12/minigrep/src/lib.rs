@@ -19,13 +19,13 @@ impl Config {
         }
 
         let queries = args[1..num_args - 1].iter().map(|s| s.to_string()).collect();
+        // TODO: Remove cloning here
         let filename = args[num_args - 1].clone();
 
         /*
         If there is no env variable called CASE_INSENSITIVE, .is_err will return true, meaning that we should search with case sensitivity.
         */
         let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
-        // TODO: Remove cloning here
         Ok(Config {
             queries,
             filename,
@@ -100,14 +100,14 @@ fn print_results(results: Vec<&str>) {
 mod test {
     use super::*;
 
-    // #[test]
-    // fn one_query() {
-    //     let query = "duct";
-    //     let content = "Rust: \nsafe, fast, productive.\nPick three.
-    //     ";
+    #[test]
+    fn one_query() {
+        let query = vec!["duct"];
+        let content = "Rust: \nsafe, fast, productive.\nPick three.
+        ";
 
-    //     assert_eq!(vec!["safe, fast, productive."], search(query, content))
-    // }
+        assert_eq!(vec!["safe, fast, productive."], search(query, content))
+    }
 
     #[test]
     fn case_insensitive() {
