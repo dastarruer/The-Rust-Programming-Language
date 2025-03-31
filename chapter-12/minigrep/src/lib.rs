@@ -22,7 +22,6 @@ impl Config {
             .iter()
             .map(|s| s.to_string())
             .collect();
-        // TODO: Remove cloning here
         let filename = args[num_args - 1].clone();
 
         /*
@@ -38,27 +37,32 @@ impl Config {
 }
 
 /// Run main logic
-pub fn run(config: &Config) {
+pub fn run(config: &Config) -> Result<(), std::io::Error> {
     // Read file content
-    let content = read_from_file(&config.filename);
+    let content = read_from_file(&config.filename)?;
+
     let query_refs = config.queries.iter().map(|s| s.as_str()).collect();
+    let results;
 
     // Search for word in file and print results
-    let results = match config.case_sensitive {
-        true => search(query_refs, &content),
-        false => search_case_insensitive(query_refs, &content),
-    };
+    if config.case_sensitive == true {
+        results = search(query_refs, &content);
+    } else {
+        results = search_case_insensitive(query_refs, &content)
+    }
     print_results(results);
+
+    Ok(())
 }
 
 /// Return file content
-fn read_from_file(filename: &str) -> String {
-    let mut f = File::open(filename).expect("Unable to find file, try again.");
+fn read_from_file(filename: &str) -> Result<String, std::io::Error> {
+    let mut f = File::open(filename)?;
 
     let mut content = String::new();
-    f.read_to_string(&mut content).expect("Error reading file.");
+    f.read_to_string(&mut content)?;
 
-    content
+    Ok(content)
 }
 
 /// Search for a word in a given file's content

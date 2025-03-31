@@ -12,6 +12,9 @@ fn main() {
         process::exit(1);
     });
 
-    run(&config);
+    run(&config).unwrap_or_else(|err| {
+        eprintln!("Problem running program: {}", err);
+        process::exit(1);
+    });
 }
 
