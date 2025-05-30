@@ -83,8 +83,8 @@ fn search<'a>(queries: Vec<&'a str>, content: &'a str) -> Vec<&'a str> {
 }
 /// Search for a word in a given file's content, disregarding case
 fn search_case_insensitive<'a>(queries: Vec<&'a str>, content: &'a str) -> Vec<&'a str> {
-    let queries: Vec<_> = queries.into_iter().map(|s| s.to_lowercase()).collect();
-    let mut results = Vec::new();
+    let queries: Vec<_> = queries.into_iter().map(|s: &'a str| s.to_lowercase()).collect();
+    let mut results: Vec<&str> = Vec::new();
 
     // Go through each line
     for line in content.lines() {
