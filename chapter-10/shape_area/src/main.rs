@@ -1,6 +1,8 @@
 use std::io;
 use std::io::Write;
 use std::process::exit;
+
+#[derive(Debug, PartialEq)]
 enum Shape {
     Square,
     Circle,
@@ -23,20 +25,25 @@ fn get_shape() -> Option<Shape> {
     io::stdin()
         .read_line(&mut buffer) // Read the user input into a variable
         .expect("Failed to read line");
-    
-    match buffer.as_str() {
+
+    parse_string(&buffer)
+}
+
+fn parse_string(input: &str) -> Option<Shape> {
+    match input {
         "1" => Some(Shape::Square),
         "2" => Some(Shape::Circle),
         _ => None
     }
 }
 
-// #[cfg(test)]
-// mod tests {
-// 	use super::* // Import everything from the file
+#[cfg(test)]
+mod tests {
+    use super::*;
 
-// 	#[test] // This attribute is required to tell cargo test this is a test
-// 	fn it_works() {
-// 		assert_eq!(2 + 2, 4);
-// 	}
-// }
+	#[test] // This attribute is required to tell cargo test this is a test
+	fn parse_shape_valid_input() {
+		assert_eq!(parse_string("1"), Some(Shape::Square));
+		assert_eq!(parse_string("2"), Some(Shape::Circle));
+	}
+}
