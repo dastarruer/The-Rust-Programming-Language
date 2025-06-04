@@ -30,7 +30,7 @@ fn get_shape() -> Option<Shape> {
 }
 
 fn parse_string(input: &str) -> Option<Shape> {
-    match input {
+    match input.trim() {
         "1" => Some(Shape::Square),
         "2" => Some(Shape::Circle),
         _ => None
@@ -43,7 +43,7 @@ mod tests {
 
 	#[test] // This attribute is required to tell cargo test this is a test
 	fn parse_shape_valid_input() {
-		assert_eq!(parse_string("1"), Some(Shape::Square));
-		assert_eq!(parse_string("2"), Some(Shape::Circle));
+		assert_eq!(parse_string("1\n"), Some(Shape::Square));
+		assert_eq!(parse_string("2   "), Some(Shape::Circle));
 	}
 }
