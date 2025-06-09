@@ -8,6 +8,7 @@ pub trait UserGenerated {
 }
 pub trait Area {
     fn calculate_area(&self) -> f64;
+    fn print_area(&self);
 }
 
 #[derive(Debug, PartialEq)]
@@ -32,13 +33,18 @@ impl Area for Square {
     fn calculate_area(&self) -> f64 {
         self.width * self.height
     }
+
+    fn print_area(&self) {
+        let area = self.calculate_area();
+        println!("Area of square: {}", area);
+    }
 }
 
 impl UserGenerated for Square {
     fn get_new_shape() -> Self {
         let mut height = String::new();
         let mut width = String::new();
-        
+
         // Ask for width
         print!("Input square width: ");
         std::io::stdout()
@@ -119,13 +125,23 @@ impl Area for Circle {
     fn calculate_area(&self) -> f64 {
         PI * self.radius * self.radius
     }
+
+    fn print_area(&self) {
+        let area = self.calculate_area();
+        println!("Area of circle: {}", area);
+    }
 }
 
 fn main() {
-    let _shape = get_shape().unwrap_or_else(|| {
+    let shape = get_shape().unwrap_or_else(|| {
         println!("Invalid input, please try again.");
         exit(1)
     });
+
+    match shape {
+        Shape::Square(square) => square.print_area(),
+        Shape::Circle(circle) => circle.print_area(),
+    }
 }
 
 fn get_shape() -> Option<Shape> {
