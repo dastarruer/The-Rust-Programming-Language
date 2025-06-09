@@ -1,3 +1,4 @@
+use std::f64::consts::PI;
 use std::io;
 use std::io::Write;
 use std::process::exit;
@@ -18,15 +19,31 @@ struct Square {
     width: f64,
 }
 
+impl Square {
+    fn new(width: f64, height: f64) -> Self {
+        Square { height, width }
+    }
+}
+
 impl Area for Square {
     fn calculate_area(&self) -> f64 {
         self.width * self.height
     }
 }
 
-impl Square {
-    fn new(width: f64, height: f64) -> Self {
-        return Square { height, width };
+struct Circle {
+    radius: f64,
+}
+
+impl Circle {
+    fn new(radius: f64) -> Self {
+        Circle { radius }
+    }
+}
+
+impl Area for Circle {
+    fn calculate_area(&self) -> f64 {
+        PI * self.radius * self.radius
     }
 }
 
@@ -82,6 +99,9 @@ mod tests {
     #[test]
     fn shape_area_valid_output() {
         let square = Square::new(5.0, 3.0);
-        assert_eq!(square.calculate_area(), 15.0)
+        assert_eq!(square.calculate_area(), 15.0);
+
+        let circle = Circle::new(5.0);
+        assert_eq!(circle.calculate_area(), 78.53981634)
     }
 }
