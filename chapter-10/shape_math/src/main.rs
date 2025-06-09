@@ -2,10 +2,32 @@ use std::io;
 use std::io::Write;
 use std::process::exit;
 
+pub trait Area {
+    fn calculate_area(&self) -> f64;
+}
+
 #[derive(Debug, PartialEq)]
 enum Shape {
-    Square,
+    Square(Square),
     Circle,
+}
+
+#[derive(Debug, PartialEq)]
+struct Square {
+    height: f64,
+    width: f64,
+}
+
+impl Area for Square {
+    fn calculate_area(&self) -> f64 {
+        self.width * self.height
+    }
+}
+
+impl Square {
+    fn new(width: f64, height: f64) -> Self {
+        return Square { height, width };
+    }
 }
 
 fn main() {
@@ -31,9 +53,13 @@ fn get_shape() -> Option<Shape> {
 
 fn parse_string(input: &str) -> Option<Shape> {
     match input.trim() {
-        "1" => Some(Shape::Square),
+        "1" => {
+            const DEFAULT_WIDTH: f64 = 2.0;
+            const DEFAULT_HEIGHT: f64 = 2.0;
+            Some(Shape::Square(Square::new(DEFAULT_WIDTH, DEFAULT_HEIGHT)))
+        }
         "2" => Some(Shape::Circle),
-        _ => None
+        _ => None,
     }
 }
 
@@ -41,9 +67,21 @@ fn parse_string(input: &str) -> Option<Shape> {
 mod tests {
     use super::*;
 
-	#[test] // This attribute is required to tell cargo test this is a test
-	fn parse_shape_valid_input() {
-		assert_eq!(parse_string("1\n"), Some(Shape::Square));
-		assert_eq!(parse_string("2   "), Some(Shape::Circle));
-	}
+    #[test]
+    fn parse_shape_valid_input() {
+        assert_eq!(
+            parse_string("1\n"),
+            Some(Shape::Square(Square {
+                height: 2.0,
+                width: 2.0
+            }))
+        );
+        assert_eq!(parse_string("2   "), Some(Shape::Circle));
+    }
+
+    #[test]
+    fn shape_area_valid_output() {
+        let square = Square::new(5.0, 3.0);
+        assert_eq!(square.calculate_area(), 15.0)
+    }
 }
