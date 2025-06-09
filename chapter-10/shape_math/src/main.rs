@@ -34,6 +34,50 @@ impl Area for Square {
     }
 }
 
+impl UserGenerated for Square {
+    fn get_new_shape() -> Self {
+        let mut height = String::new();
+        let mut width = String::new();
+        
+        // Ask for width
+        print!("Input square width: ");
+        std::io::stdout()
+            .flush()
+            .expect("Error flushing stdout, please try again.");
+
+        // Take user inputted width
+        io::stdin()
+            .read_line(&mut width) // Read the user input into a variable
+            .expect("Failed to read line");
+
+        let width: u64 = width.trim().parse().unwrap_or_else(|_| {
+            println!("Invalid input, please try again.");
+            exit(1)
+        });
+        let width = width as f64;
+
+        // Ask for height
+        print!("Input square height: ");
+        std::io::stdout()
+            .flush()
+            .expect("Error flushing stdout, please try again.");
+
+        // Take user inputted height
+        io::stdin()
+            .read_line(&mut height) // Read the user input into a variable
+            .expect("Failed to read line");
+
+        let height: u64 = height.trim().parse().unwrap_or_else(|_| {
+            println!("Invalid input, please try again.");
+            exit(1)
+        });
+        let height = height as f64;
+
+        // Return a new square
+        Self::new(width, height)
+    }
+}
+
 #[derive(Debug, PartialEq)]
 struct Circle {
     radius: f64,
@@ -101,9 +145,8 @@ fn get_shape() -> Option<Shape> {
 fn parse_string(input: &str) -> Option<Shape> {
     match input.trim() {
         "1" => {
-            const DEFAULT_WIDTH: f64 = 2.0;
-            const DEFAULT_HEIGHT: f64 = 2.0;
-            Some(Shape::Square(Square::new(DEFAULT_WIDTH, DEFAULT_HEIGHT)))
+            let square = Square::get_new_shape();
+            Some(Shape::Square(square))
         }
         "2" => {
             let circle = Circle::get_new_shape();
