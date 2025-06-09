@@ -78,7 +78,7 @@ impl Area for Circle {
 }
 
 fn main() {
-    let shape = get_shape().unwrap_or_else(|| {
+    let _shape = get_shape().unwrap_or_else(|| {
         println!("Invalid input, please try again.");
         exit(1)
     });
