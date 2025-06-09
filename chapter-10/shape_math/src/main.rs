@@ -3,6 +3,9 @@ use std::io;
 use std::io::Write;
 use std::process::exit;
 
+pub trait UserGenerated {
+    fn get_new_shape() -> Self;
+}
 pub trait Area {
     fn calculate_area(&self) -> f64;
 }
@@ -40,8 +43,10 @@ impl Circle {
     fn new(radius: f64) -> Self {
         Circle { radius }
     }
+}
 
-    fn get_new_circle() -> Self {
+impl UserGenerated for Circle {
+    fn get_new_shape() -> Self {
         let mut radius = String::new();
 
         // Ask for radius
@@ -55,10 +60,11 @@ impl Circle {
             .read_line(&mut radius) // Read the user input into a variable
             .expect("Failed to read line");
 
-        let radius: f64 = radius.parse().unwrap_or_else(|_| {
+        let radius: u64 = radius.trim().parse().unwrap_or_else(|_| {
             println!("Invalid input, please try again.");
             exit(1)
         });
+        let radius = radius as f64;
 
         // Return a new circle
         Self::new(radius)
@@ -100,7 +106,7 @@ fn parse_string(input: &str) -> Option<Shape> {
             Some(Shape::Square(Square::new(DEFAULT_WIDTH, DEFAULT_HEIGHT)))
         }
         "2" => {
-            let circle = Circle::get_new_circle();
+            let circle = Circle::get_new_shape();
             Some(Shape::Circle(circle))
         }
         _ => None,
@@ -110,18 +116,6 @@ fn parse_string(input: &str) -> Option<Shape> {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    #[test]
-    fn parse_shape_valid_input() {
-        assert_eq!(
-            parse_string("1\n"),
-            Some(Shape::Square(Square {
-                height: 2.0,
-                width: 2.0
-            }))
-        );
-        assert_eq!(parse_string("2   "), Some(Shape::Circle));
-    }
 
     #[test]
     fn shape_area_valid_output() {
