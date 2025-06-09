@@ -10,7 +10,7 @@ pub trait Area {
 #[derive(Debug, PartialEq)]
 enum Shape {
     Square(Square),
-    Circle,
+    Circle(Circle),
 }
 
 #[derive(Debug, PartialEq)]
@@ -31,6 +31,7 @@ impl Area for Square {
     }
 }
 
+#[derive(Debug, PartialEq)]
 struct Circle {
     radius: f64,
 }
@@ -38,6 +39,29 @@ struct Circle {
 impl Circle {
     fn new(radius: f64) -> Self {
         Circle { radius }
+    }
+
+    fn get_new_circle() -> Self {
+        let mut radius = String::new();
+
+        // Ask for radius
+        print!("Input circle radius: ");
+        std::io::stdout()
+            .flush()
+            .expect("Error flushing stdout, please try again.");
+
+        // Take user input
+        io::stdin()
+            .read_line(&mut radius) // Read the user input into a variable
+            .expect("Failed to read line");
+
+        let radius: f64 = radius.parse().unwrap_or_else(|_| {
+            println!("Invalid input, please try again.");
+            exit(1)
+        });
+
+        // Return a new circle
+        Self::new(radius)
     }
 }
 
@@ -75,7 +99,10 @@ fn parse_string(input: &str) -> Option<Shape> {
             const DEFAULT_HEIGHT: f64 = 2.0;
             Some(Shape::Square(Square::new(DEFAULT_WIDTH, DEFAULT_HEIGHT)))
         }
-        "2" => Some(Shape::Circle),
+        "2" => {
+            let circle = Circle::get_new_circle();
+            Some(Shape::Circle(circle))
+        }
         _ => None,
     }
 }
