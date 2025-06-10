@@ -45,12 +45,15 @@ fn main() {
             circle.print_perimeter();
             circle.print_area();
         }
-        Shape::Decagon(decagon) => todo!()
+        Shape::Decagon(decagon) => {
+            decagon.print_perimeter();
+            decagon.print_area();
+        }
     }
 }
 
 fn get_shape() -> Option<Shape> {
-    print!("Pick a shape:\n1) Square\n2) Circle\n-> ");
+    print!("Pick a shape:\n1) Square\n2) Circle\n3) Decagon\n-> ");
     std::io::stdout()
         .flush()
         .expect("Error flushing stdout, please try again.");
@@ -72,6 +75,10 @@ fn parse_string(input: &str) -> Option<Shape> {
         "2" => {
             let circle = Circle::get_new_shape();
             Some(Shape::Circle(circle))
+        }
+        "3" => {
+            let decagon = Decagon::get_new_shape();
+            Some(Shape::Decagon(decagon))
         }
         _ => None,
     }
