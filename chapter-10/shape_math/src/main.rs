@@ -3,9 +3,11 @@ use std::io::Write;
 use std::process::exit;
 
 mod circle;
+mod decagon;
 mod square;
 
 use crate::circle::Circle;
+use crate::decagon::Decagon;
 use crate::square::Square;
 
 pub trait UserGenerated {
@@ -25,6 +27,7 @@ pub trait Perimeter {
 enum Shape {
     Square(Square),
     Circle(Circle),
+    Decagon(Decagon),
 }
 
 fn main() {
@@ -42,6 +45,7 @@ fn main() {
             circle.print_perimeter();
             circle.print_area();
         }
+        Shape::Decagon(decagon) => todo!()
     }
 }
 
@@ -83,7 +87,10 @@ mod tests {
         assert_eq!(square.calculate_area(), 15.0);
 
         let circle = Circle::new(5.0);
-        assert_eq!(circle.calculate_area(), 78.53981633974483)
+        assert_eq!(circle.calculate_area(), 78.53981633974483);
+
+        let decagon = Decagon::new(15.0);
+        assert_eq!(decagon.calculate_area(), 1731.1969896610801);
     }
 
     #[test]
@@ -92,6 +99,9 @@ mod tests {
         assert_eq!(square.calculate_perimeter(), 16.0);
 
         let circle = Circle::new(5.0);
-        assert_eq!(circle.calculate_perimeter(), 31.41592653589793)
+        assert_eq!(circle.calculate_perimeter(), 31.41592653589793);
+
+        let decagon = Decagon::new(15.0);
+        assert_eq!(decagon.calculate_perimeter(), 150.0);
     }
 }
