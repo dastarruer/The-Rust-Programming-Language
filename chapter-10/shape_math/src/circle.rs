@@ -1,10 +1,36 @@
-use std::{f64::consts::PI, io::{self, Write}, process::exit};
+use std::{
+    f64::consts::PI,
+    io::{self, Write},
+    process::exit,
+};
 
-use crate::{Area, UserGenerated};
+use crate::{Area, Perimeter, UserGenerated};
 
 #[derive(Debug, PartialEq)]
 pub struct Circle {
     radius: f64,
+}
+
+impl Area for Circle {
+    fn calculate_area(&self) -> f64 {
+        PI * self.radius * self.radius
+    }
+
+    fn print_area(&self) {
+        let area = self.calculate_area();
+        println!("Area of circle: {}", area);
+    }
+}
+
+impl Perimeter for Circle {
+    fn calculate_perimeter(&self) -> f64 {
+        2.0 * PI * self.radius
+    }
+
+    fn print_perimeter(&self) {
+        let perimeter = self.calculate_perimeter();
+        println!("Perimeter of circle: {}", perimeter)
+    }
 }
 
 impl Circle {
@@ -39,13 +65,3 @@ impl UserGenerated for Circle {
     }
 }
 
-impl Area for Circle {
-    fn calculate_area(&self) -> f64 {
-        PI * self.radius * self.radius
-    }
-
-    fn print_area(&self) {
-        let area = self.calculate_area();
-        println!("Area of circle: {}", area);
-    }
-}

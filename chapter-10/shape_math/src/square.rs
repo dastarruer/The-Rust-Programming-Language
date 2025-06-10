@@ -1,7 +1,7 @@
 use std::{io::Write, process::exit};
 use std::io;
 
-use crate::{Area, UserGenerated};
+use crate::{Area, Perimeter, UserGenerated};
 
 #[derive(Debug, PartialEq)]
 pub struct Square {
@@ -23,6 +23,17 @@ impl Area for Square {
     fn print_area(&self) {
         let area = self.calculate_area();
         println!("Area of square: {}", area);
+    }
+}
+
+impl Perimeter for Square {
+    fn calculate_perimeter(&self) -> f64 {
+        2.0 * self.width + 2.0 * self.height
+    }
+
+    fn print_perimeter(&self) {
+        let perimeter = self.calculate_perimeter();
+        println!("Perimeter of square: {}", perimeter)
     }
 }
 
