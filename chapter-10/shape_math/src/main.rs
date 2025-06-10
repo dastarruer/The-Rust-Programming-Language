@@ -1,5 +1,3 @@
-use std::io;
-use std::io::Write;
 use std::process::exit;
 
 mod circle;
