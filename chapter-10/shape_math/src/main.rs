@@ -5,10 +5,13 @@ use std::process::exit;
 mod circle;
 mod decagon;
 mod square;
+mod utils;
 
 use crate::circle::Circle;
 use crate::decagon::Decagon;
 use crate::square::Square;
+
+use crate::utils::get_shape;
 
 pub trait UserGenerated {
     fn get_new_shape() -> Self;
@@ -49,38 +52,6 @@ fn main() {
             decagon.print_perimeter();
             decagon.print_area();
         }
-    }
-}
-
-fn get_shape() -> Option<Shape> {
-    print!("Pick a shape:\n1) Square\n2) Circle\n3) Decagon\n-> ");
-    std::io::stdout()
-        .flush()
-        .expect("Error flushing stdout, please try again.");
-
-    let mut buffer: String = String::new();
-    io::stdin()
-        .read_line(&mut buffer) // Read the user input into a variable
-        .expect("Failed to read line");
-
-    parse_string(&buffer)
-}
-
-fn parse_string(input: &str) -> Option<Shape> {
-    match input.trim() {
-        "1" => {
-            let square = Square::get_new_shape();
-            Some(Shape::Square(square))
-        }
-        "2" => {
-            let circle = Circle::get_new_shape();
-            Some(Shape::Circle(circle))
-        }
-        "3" => {
-            let decagon = Decagon::get_new_shape();
-            Some(Shape::Decagon(decagon))
-        }
-        _ => None,
     }
 }
 
