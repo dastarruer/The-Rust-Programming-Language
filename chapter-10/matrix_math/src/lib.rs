@@ -106,5 +106,16 @@ mod tests {
             assert_eq!(c.rows, 2);
             assert_eq!(c.cols, 2);
         }
+
+        // Add matrices of different dimensions (invalid)
+        #[test]
+        fn add_matrix_invalid() {
+            let a = Matrix::new(2, 3, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]).unwrap();
+            let b = Matrix::new(2, 2, vec![5.0, 3.0, 2.0, 1.0]).unwrap();
+            let c = Matrix::add(a, b);
+
+            let error = Matrix::add(a, b);
+            assert_eq!(error.unwrap(), "Cannot add matrices: Both are of different dimensions.");
+        }
     }
 }
