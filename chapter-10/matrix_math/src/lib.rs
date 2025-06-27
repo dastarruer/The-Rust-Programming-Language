@@ -1,4 +1,5 @@
 #[derive(Debug)]
+#[derive(PartialEq)]
 #[allow(dead_code)]
 struct Matrix<T> {
     content: Vec<Vec<T>>,
@@ -6,7 +7,12 @@ struct Matrix<T> {
 
 impl<T: Clone + Copy> Matrix<T> {
     #[allow(dead_code)]
-    fn new<'a>(cols: i8, values: Vec<T>) -> Result<Matrix<T>, &'a str> {
+    fn new<'a>(cols: i8, values: Vec<T>) -> Result<Matrix<T>, &'static str> {
+        // Check if there are more values than there are columns
+        if values.len() % cols as usize != 0 {
+            return Err("Number of values exceeds the number of columns available.")
+        }
+
         // Stores the 2D array which will hold all the values in the matrix
         let mut final_values: Vec<Vec<T>> = Vec::new();
 
@@ -33,11 +39,6 @@ impl<T: Clone + Copy> Matrix<T> {
                     current_col += 1;
                 } 
             } else {
-                // Check if there are more values than there are columns
-                if i + 1 < row.len() {
-                    return Err("Number of values exceeds the number of columns available.")
-                }
-
                 // Since we've run out of columns, we can simply exit the loop
                 break
             }
@@ -77,7 +78,6 @@ mod tests {
     #[test]
     fn init_matrix_invalid() {
         let error = Matrix::<f64>::new(3, vec![1.25, 2.25, 3.25, 4.25, 5.25, 6.0, 7.25]);
-        assert!(error.is_err());
-        assert_eq!(error.unwrap_err(), "Number of values exceeds the number of available columns.");
+        assert_eq!(error, Err("Number of values exceeds the number of columns available."));
     }
 }
