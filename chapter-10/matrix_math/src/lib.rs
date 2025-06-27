@@ -23,18 +23,18 @@ impl<T: Clone + Copy + std::ops::Add<Output = T>> Matrix<T>{
     }
 
     #[allow(dead_code)]
-    fn add(a: Matrix<T>, b: Matrix<T>) -> Matrix<T> {
+    fn add(a: Matrix<T>, b: Matrix<T>) -> Result<Matrix<T>, &'static str> {
         let mut new_values = Vec::new();
 
         for (i, a_value) in a.values.iter().enumerate() {
             new_values.push(*a_value + b.values[i]);
         }
 
-        Matrix {
+        Ok(Matrix {
             rows: a.rows,
             cols: a.cols,
             values: new_values,
-        }
+        })
     }
 }
 
@@ -86,7 +86,7 @@ mod tests {
         fn add_matrix_i32() {
             let a = Matrix::new(2, 2, vec![1, 2, 3, 4]).unwrap();
             let b = Matrix::new(2, 2, vec![5, 3, 2, 1]).unwrap();
-            let c = Matrix::add(a, b);
+            let c = Matrix::add(a, b).unwrap();
 
             let expected_values = vec![6, 5, 5, 5];
             assert_eq!(c.values, expected_values);
@@ -99,7 +99,7 @@ mod tests {
         fn add_matrix_f64() {
             let a = Matrix::new(2, 2, vec![1.0, 2.0, 3.0, 4.0]).unwrap();
             let b = Matrix::new(2, 2, vec![5.0, 3.0, 2.0, 1.0]).unwrap();
-            let c = Matrix::add(a, b);
+            let c = Matrix::add(a, b).unwrap();
 
             let expected_values = vec![6.0, 5.0, 5.0, 5.0];
             assert_eq!(c.values, expected_values);
@@ -112,10 +112,9 @@ mod tests {
         fn add_matrix_invalid() {
             let a = Matrix::new(2, 3, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]).unwrap();
             let b = Matrix::new(2, 2, vec![5.0, 3.0, 2.0, 1.0]).unwrap();
-            let c = Matrix::add(a, b);
-
             let error = Matrix::add(a, b);
-            assert_eq!(error.unwrap(), "Cannot add matrices: Both are of different dimensions.");
+
+            assert_eq!(error, Err("Cannot add matrices: Both are of different dimensions."));
         }
     }
 }
