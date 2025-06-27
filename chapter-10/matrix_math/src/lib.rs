@@ -23,7 +23,7 @@ impl<T: Clone + Copy + std::ops::Add<Output = T>> Matrix<T>{
     }
 
     // Check that two matrices have the same dimensions
-    fn is_same_dimensions(a: &Matrix<T>, b: &Matrix<T>) -> bool {
+    fn is_same_dimensions<U>(a: &Matrix<T>, b: &Matrix<U>) -> bool {
         a.rows == b.rows && a.cols == b.cols
     }
 
@@ -102,6 +102,14 @@ mod tests {
         }
 
         #[test]
+        fn compare_same_dimensions_different_types() {
+            let a = Matrix::new(2, 2, vec![1, 2, 3, 4]).unwrap();
+            let b = Matrix::new(2, 2, vec![5.0, 3.0, 2.0, 1.0]).unwrap();
+
+            assert!(Matrix::is_same_dimensions(&a, &b))
+        }
+
+        #[test]
         #[should_panic]
         fn compare_different_dimensions() {
             let a = Matrix::new(2, 3, vec![1, 2, 3, 4, 5, 6]).unwrap();
@@ -109,6 +117,7 @@ mod tests {
 
             assert!(Matrix::is_same_dimensions(&a, &b))
         }
+
     }
 
     // Adding matrices
