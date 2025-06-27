@@ -78,6 +78,7 @@ mod tests {
     mod add_matrix {
         use crate::Matrix;
 
+        // Add matrices of i32 type
         #[test]
         fn add_matrix_i32() {
             let a = Matrix::new(2, 2, vec![1, 2, 3, 4]).unwrap();
@@ -85,6 +86,19 @@ mod tests {
             let c = Matrix::add(a, b);
 
             let expected_values = vec![6, 5, 5, 5];
+            assert_eq!(c.values, expected_values);
+            assert_eq!(c.rows, 2);
+            assert_eq!(c.cols, 2);
+        }
+
+        // Add matrices of f64 type
+        #[test]
+        fn add_matrix_f64() {
+            let a = Matrix::new(2, 2, vec![1.0, 2.0, 3.0, 4.0]).unwrap();
+            let b = Matrix::new(2, 2, vec![5.0, 3.0, 2.0, 1.0]).unwrap();
+            let c = Matrix::add(a, b);
+
+            let expected_values = vec![6.0, 5.0, 5.0, 5.0];
             assert_eq!(c.values, expected_values);
             assert_eq!(c.rows, 2);
             assert_eq!(c.cols, 2);
