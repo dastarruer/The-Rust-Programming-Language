@@ -3,12 +3,16 @@ struct Matrix<T> {
     content: Vec<Vec<T>>,
 }
 
-impl<T> Matrix<T> {
+impl<T: Clone + Copy> Matrix<T> {
     #[allow(dead_code)]
-    fn new(cols: i32, values: Vec<i32>) -> Matrix<i32> {
-        let mut final_values: Vec<Vec<i32>> = Vec::new();
+    fn new(cols: i8, values: Vec<T>) -> Matrix<T> {
+        // Stores the 2D array which will hold all the values in the matrix
+        let mut final_values: Vec<Vec<T>> = Vec::new();
 
-        let mut row:Vec<i32> = Vec::new();
+        // Stores the current row
+        let mut row:Vec<T> = Vec::new();
+
+        // Keep track of what the current column is
         let mut current_col = 0;
         for (i, value) in values.iter().enumerate() {
             // Execute if we still have some columns left
@@ -46,11 +50,21 @@ mod tests {
     use super::*;
 
     #[test]
-    fn init_matrix() {
+    fn init_matrix_i32() {
         let matrix = Matrix::<i32>::new(3, vec![1, 2, 3, 4, 5, 6]);
         let expected = vec![
             vec![1, 2, 3],
             vec![4, 5, 6],
+        ];
+        assert_eq!(matrix.content, expected);
+    }
+
+    #[test]
+    fn init_matrix_f64() {
+        let matrix = Matrix::<f64>::new(3, vec![1.25, 2.25, 3.25, 4.25, 5.25, 6.25]);
+        let expected = vec![
+            vec![1.25, 2.25, 3.25],
+            vec![4.25, 5.25, 6.25],
         ];
         assert_eq!(matrix.content, expected);
     }
