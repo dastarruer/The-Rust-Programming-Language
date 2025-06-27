@@ -93,6 +93,7 @@ mod tests {
     mod validate_dimensions {
         use crate::Matrix;
         
+        // Compare two matrices of same dimensions
         #[test]
         fn compare_same_dimensions() {
             let a = Matrix::new(2, 2, vec![1, 2, 3, 4]).unwrap();
@@ -101,6 +102,7 @@ mod tests {
             assert!(Matrix::is_same_dimensions(&a, &b))
         }
 
+        // Compare two matrices of same dimensions but different types
         #[test]
         fn compare_same_dimensions_different_types() {
             let a = Matrix::new(2, 2, vec![1, 2, 3, 4]).unwrap();
@@ -109,6 +111,17 @@ mod tests {
             assert!(Matrix::is_same_dimensions(&a, &b))
         }
 
+        // Compare two matrices of different dimensions and different types
+        #[test]
+        #[should_panic]
+        fn compare_different_dimensions_different_types() {
+            let a = Matrix::new(2, 3, vec![1, 2, 3, 4, 5, 6]).unwrap();
+            let b = Matrix::new(2, 2, vec![5.0, 3.0, 2.0, 1.0]).unwrap();
+
+            assert!(Matrix::is_same_dimensions(&a, &b))
+        }
+
+        // Compare two matrices of different dimensions
         #[test]
         #[should_panic]
         fn compare_different_dimensions() {
@@ -117,7 +130,6 @@ mod tests {
 
             assert!(Matrix::is_same_dimensions(&a, &b))
         }
-
     }
 
     // Adding matrices
