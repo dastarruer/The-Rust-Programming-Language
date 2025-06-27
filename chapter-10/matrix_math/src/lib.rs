@@ -22,8 +22,19 @@ impl<T: Clone + Copy + std::ops::Add<Output = T>> Matrix<T>{
         })
     }
 
+    // Check that two matrices have the same dimensions
+    fn is_same_dimensions(a: &Matrix<T>, b: &Matrix<T>) -> bool {
+        a.rows == b.rows && a.cols == b.cols
+    }
+
+    // Add two matrices
     #[allow(dead_code)]
     fn add(a: Matrix<T>, b: Matrix<T>) -> Result<Matrix<T>, &'static str> {
+        // If the matrices are of different dimensions, then they cannot be added
+        if !Self::is_same_dimensions(&a, &b) {
+            return Err("Cannot add matrices: Both matrices are of different dimensions.")
+        }
+
         let mut new_values = Vec::new();
 
         for (i, a_value) in a.values.iter().enumerate() {
@@ -38,10 +49,6 @@ impl<T: Clone + Copy + std::ops::Add<Output = T>> Matrix<T>{
         })
     }
 
-    // Check that two matrices have the same dimensions
-    fn is_same_dimensions(a: Matrix<T>, b: Matrix<T>) -> bool {
-        a.rows == b.rows && a.cols == b.cols
-    }
 }
 
 #[cfg(test)]
@@ -91,7 +98,7 @@ mod tests {
             let a = Matrix::new(2, 2, vec![1, 2, 3, 4]).unwrap();
             let b = Matrix::new(2, 2, vec![5, 3, 2, 1]).unwrap();
 
-            assert!(Matrix::is_same_dimensions(a, b))
+            assert!(Matrix::is_same_dimensions(&a, &b))
         }
 
         #[test]
@@ -100,7 +107,7 @@ mod tests {
             let a = Matrix::new(2, 3, vec![1, 2, 3, 4, 5, 6]).unwrap();
             let b = Matrix::new(2, 2, vec![5, 3, 2, 1]).unwrap();
 
-            assert!(Matrix::is_same_dimensions(a, b))
+            assert!(Matrix::is_same_dimensions(&a, &b))
         }
     }
 
@@ -141,7 +148,7 @@ mod tests {
             let b = Matrix::new(2, 2, vec![5.0, 3.0, 2.0, 1.0]).unwrap();
             let error = Matrix::add(a, b);
 
-            assert_eq!(error, Err("Cannot add matrices: Both are of different dimensions."));
+            assert_eq!(error, Err("Cannot add matrices: Both matrices are of different dimensions."));
         }
     }
 }
