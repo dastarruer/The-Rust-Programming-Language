@@ -27,6 +27,7 @@ impl<T: Clone + Copy + std::ops::Add<Output = T>> Matrix<T>{
         let mut new_values = Vec::new();
 
         for (i, a_value) in a.values.iter().enumerate() {
+            // Add the corresponding 'a' and 'b' values and push it to the new_values array
             new_values.push(*a_value + b.values[i]);
         }
 
@@ -35,6 +36,11 @@ impl<T: Clone + Copy + std::ops::Add<Output = T>> Matrix<T>{
             cols: a.cols,
             values: new_values,
         })
+    }
+
+    // Check that two matrices have the same dimensions
+    fn is_same_dimensions(a: Matrix<T>, b: Matrix<T>) -> bool {
+        a.rows == b.rows && a.cols == b.cols
     }
 }
 
@@ -74,6 +80,27 @@ mod tests {
 
             let error = Matrix::<f64>::new(2, 3, vec![1.25, 2.25, 3.25, 4.25, 5.25]);
             assert_eq!(error, Err("Cannot create matrix: leftover values that can't fill an entire row are present."));
+        }
+    }
+
+    mod validate_dimensions {
+        use crate::Matrix;
+        
+        #[test]
+        fn compare_same_dimensions() {
+            let a = Matrix::new(2, 2, vec![1, 2, 3, 4]).unwrap();
+            let b = Matrix::new(2, 2, vec![5, 3, 2, 1]).unwrap();
+
+            assert!(Matrix::is_same_dimensions(a, b))
+        }
+
+        #[test]
+        #[should_panic]
+        fn compare_different_dimensions() {
+            let a = Matrix::new(2, 3, vec![1, 2, 3, 4, 5, 6]).unwrap();
+            let b = Matrix::new(2, 2, vec![5, 3, 2, 1]).unwrap();
+
+            assert!(Matrix::is_same_dimensions(a, b))
         }
     }
 
