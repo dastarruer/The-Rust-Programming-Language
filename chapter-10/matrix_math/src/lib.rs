@@ -1,8 +1,10 @@
+#[allow(dead_code)]
 struct Matrix<T> {
     content: Vec<Vec<T>>,
 }
 
 impl<T> Matrix<T> {
+    #[allow(dead_code)]
     fn new(cols: i32, content: Vec<i32>) -> Matrix<i32> {
         let mut final_content: Vec<Vec<i32>> = Vec::new();
 
@@ -13,7 +15,7 @@ impl<T> Matrix<T> {
             if current_col <= cols {  
                 // Push the current value to the current row
                 row.push(*value);
-                
+
                 // Check if the current index has exceeded the numberof columns available
                 if (&i + 1) % cols as usize == 0 {
                     // Push the entire current row to the 2D array
