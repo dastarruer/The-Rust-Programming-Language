@@ -12,8 +12,8 @@ impl<T: Clone + Copy + std::ops::Add<Output = T>> Matrix<T>{
     fn new(rows: i8, cols: i8, values: Vec<T>) -> Result<Matrix<T>, &'static str> {
         // Check if there are more values than there are columns
         if values.len() % cols as usize != 0 {
-            return Err("Number of values exceeds the number of columns available.")
-        }        
+            return Err("Cannot create matrix: leftover values that can't fill an entire row are present.")
+        }
         // Return the final matrix
         Ok(Matrix {
             rows,
@@ -70,7 +70,10 @@ mod tests {
         #[test]
         fn init_matrix_invalid() {
             let error = Matrix::<f64>::new(2, 3, vec![1.25, 2.25, 3.25, 4.25, 5.25, 6.0, 7.25]);
-            assert_eq!(error, Err("Number of values exceeds the number of columns available."));
+            assert_eq!(error, Err("Cannot create matrix: leftover values that can't fill an entire row are present."));
+
+            let error = Matrix::<f64>::new(2, 3, vec![1.25, 2.25, 3.25, 4.25, 5.25]);
+            assert_eq!(error, Err("Cannot create matrix: leftover values that can't fill an entire row are present."));
         }
     }
 
