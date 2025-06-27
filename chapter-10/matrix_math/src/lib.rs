@@ -7,7 +7,7 @@ struct Matrix<T> {
     values: Vec<T>,
 }
 
-impl<T: Clone + Copy> Matrix<T> {
+impl<T: Clone + Copy + std::ops::Add<Output = T>> Matrix<T>{
     #[allow(dead_code)]
     fn new(rows: i8, cols: i8, values: Vec<T>) -> Result<Matrix<T>, &'static str> {
         // Check if there are more values than there are columns
@@ -23,11 +23,17 @@ impl<T: Clone + Copy> Matrix<T> {
     }
 
     #[allow(dead_code)]
-    fn add(a: Matrix<T>, b: Matrix<T>) -> Matrix<i32> {
+    fn add(a: Matrix<T>, b: Matrix<T>) -> Matrix<T> {
+        let mut new_values = Vec::new();
+
+        for (i, a_value) in a.values.iter().enumerate() {
+            new_values.push(*a_value + b.values[i]);
+        }
+
         Matrix {
-            rows: 2,
-            cols: 3,
-            values: vec![0, 0, 0, 0, 0, 0]
+            rows: a.rows,
+            cols: a.cols,
+            values: new_values,
         }
     }
 }
@@ -76,9 +82,12 @@ mod tests {
         fn add_matrix_i32() {
             let a = Matrix::new(2, 2, vec![1, 2, 3, 4]).unwrap();
             let b = Matrix::new(2, 2, vec![5, 3, 2, 1]).unwrap();
+            let c = Matrix::add(a, b);
 
-            let expected_values = vec![6, 5, 5, 6];
-            assert_eq!(Matrix::add(a, b).values, expected_values);
+            let expected_values = vec![6, 5, 5, 5];
+            assert_eq!(c.values, expected_values);
+            assert_eq!(c.rows, 2);
+            assert_eq!(c.cols, 2);
         }
     }
 }
