@@ -53,31 +53,36 @@ impl<T: Clone + Copy> Matrix<T> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
+    // use super::*;
+    
+    mod init_matrix {
+        use crate::Matrix;
 
-    #[test]
-    fn init_matrix_i32() {
-        let matrix = Matrix::<i32>::new(3, vec![1, 2, 3, 4, 5, 6]).unwrap();
-        let expected = vec![
-            vec![1, 2, 3],
-            vec![4, 5, 6],
-        ];
-        assert_eq!(matrix.content, expected);
-    }
-
-    #[test]
-    fn init_matrix_f64() {
-        let matrix = Matrix::<f64>::new(3, vec![1.25, 2.25, 3.25, 4.25, 5.25, 6.25]).unwrap();
-        let expected = vec![
-            vec![1.25, 2.25, 3.25],
-            vec![4.25, 5.25, 6.25],
-        ];
-        assert_eq!(matrix.content, expected);
-    }
-
-    #[test]
-    fn init_matrix_invalid() {
-        let error = Matrix::<f64>::new(3, vec![1.25, 2.25, 3.25, 4.25, 5.25, 6.0, 7.25]);
-        assert_eq!(error, Err("Number of values exceeds the number of columns available."));
+        
+        #[test]
+        fn init_matrix_i32() {
+            let matrix = Matrix::<i32>::new(3, vec![1, 2, 3, 4, 5, 6]).unwrap();
+            let expected = vec![
+                vec![1, 2, 3],
+                vec![4, 5, 6],
+            ];
+            assert_eq!(matrix.content, expected);
+        }
+    
+        #[test]
+        fn init_matrix_f64() {
+            let matrix = Matrix::<f64>::new(3, vec![1.25, 2.25, 3.25, 4.25, 5.25, 6.25]).unwrap();
+            let expected = vec![
+                vec![1.25, 2.25, 3.25],
+                vec![4.25, 5.25, 6.25],
+            ];
+            assert_eq!(matrix.content, expected);
+        }
+    
+        #[test]
+        fn init_matrix_invalid() {
+            let error = Matrix::<f64>::new(3, vec![1.25, 2.25, 3.25, 4.25, 5.25, 6.0, 7.25]);
+            assert_eq!(error, Err("Number of values exceeds the number of columns available."));
+        }
     }
 }
