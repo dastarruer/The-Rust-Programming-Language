@@ -1,3 +1,4 @@
+#[derive(Debug)]
 #[allow(dead_code)]
 struct Matrix<T> {
     content: Vec<Vec<T>>,
@@ -5,7 +6,7 @@ struct Matrix<T> {
 
 impl<T: Clone + Copy> Matrix<T> {
     #[allow(dead_code)]
-    fn new(cols: i8, values: Vec<T>) -> Matrix<T> {
+    fn new<'a>(cols: i8, values: Vec<T>) -> Result<Matrix<T>, &'a str> {
         // Stores the 2D array which will hold all the values in the matrix
         let mut final_values: Vec<Vec<T>> = Vec::new();
 
@@ -32,16 +33,20 @@ impl<T: Clone + Copy> Matrix<T> {
                     current_col += 1;
                 } 
             } else {
+                // Check if there are more values than there are columns
+                if i + 1 < row.len() {
+                    return Err("Number of values exceeds the number of columns available.")
+                }
+
                 // Since we've run out of columns, we can simply exit the loop
-                // TODO: Return error if number of elements in content exceeds cols
                 break
             }
         }
         
-        // Silence the compiler for now with dummy data
-        Matrix {
+        // Return the final matrix
+        Ok(Matrix {
             content: final_values,
-        }
+        })
     }
 }
 
@@ -51,7 +56,7 @@ mod tests {
 
     #[test]
     fn init_matrix_i32() {
-        let matrix = Matrix::<i32>::new(3, vec![1, 2, 3, 4, 5, 6]);
+        let matrix = Matrix::<i32>::new(3, vec![1, 2, 3, 4, 5, 6]).unwrap();
         let expected = vec![
             vec![1, 2, 3],
             vec![4, 5, 6],
@@ -61,11 +66,18 @@ mod tests {
 
     #[test]
     fn init_matrix_f64() {
-        let matrix = Matrix::<f64>::new(3, vec![1.25, 2.25, 3.25, 4.25, 5.25, 6.25]);
+        let matrix = Matrix::<f64>::new(3, vec![1.25, 2.25, 3.25, 4.25, 5.25, 6.25]).unwrap();
         let expected = vec![
             vec![1.25, 2.25, 3.25],
             vec![4.25, 5.25, 6.25],
         ];
         assert_eq!(matrix.content, expected);
+    }
+
+    #[test]
+    fn init_matrix_invalid() {
+        let error = Matrix::<f64>::new(3, vec![1.25, 2.25, 3.25, 4.25, 5.25, 6.0, 7.25]);
+        assert!(error.is_err());
+        assert_eq!(error.unwrap_err(), "Number of values exceeds the number of available columns.");
     }
 }
