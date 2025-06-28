@@ -6,7 +6,7 @@ struct Matrix<T> {
     values: Vec<T>,
 }
 
-impl<T: Clone + Copy + std::ops::Add<Output = T> + std::ops::Sub<Output = T>> Matrix<T> {
+impl<T: Clone + Copy + std::ops::Add<Output = T> + std::ops::Sub<Output = T> + std::ops::Mul<Output = T>> Matrix<T> {
     /// Create a new instance of Matrix
     #[allow(dead_code)]
     fn new(rows: i8, cols: i8, values: Vec<T>) -> Result<Matrix<T>, &'static str> {
@@ -67,6 +67,23 @@ impl<T: Clone + Copy + std::ops::Add<Output = T> + std::ops::Sub<Output = T>> Ma
             cols: a.cols,
             values: new_values,
         })
+    }
+
+    /// Multiply a matrix by a scalar
+    #[allow(dead_code)]
+    fn scalar_multiply(a: Matrix<T>, scalar: T) -> Matrix<T> {
+        let mut new_values = Vec::new();
+
+        for a_value in &a.values {
+            // Add the corresponding 'a' and 'b' values and push it to the new_values array
+            new_values.push(*a_value * scalar);
+        }
+
+        Matrix {
+            rows: a.rows,
+            cols: a.cols,
+            values: new_values,
+        }
     }
 }
 
@@ -191,10 +208,6 @@ mod tests {
             assert_eq!(c.cols, 2);
         }
 
-        // Add matrices of different types
-        #[test]
-        fn add_matrix_different_types() {}
-
         // Add matrices of different dimensions (invalid)
         #[test]
         fn add_matrix_invalid() {
@@ -239,10 +252,6 @@ mod tests {
             assert_eq!(c.cols, 2);
         }
 
-        // subtract matrices of different types
-        #[test]
-        fn subtract_matrix_different_types() {}
-
         // subtract matrices of different dimensions (invalid)
         #[test]
         fn subtract_matrix_invalid() {
@@ -254,6 +263,37 @@ mod tests {
                 error,
                 Err("Cannot subtract matrices: Both matrices are of different dimensions.")
             );
+        }
+    }
+
+    mod scalar_multiply_matrix {
+        use crate::Matrix;
+
+        // Scalar multiply matrix of i32 type
+        #[test]
+        fn scalar_multiply_matrix_i32() {
+            let a = Matrix::new(2, 2, vec![1, 2, 3, 4]).unwrap();
+            let scalar = 3;
+            let c = Matrix::scalar_multiply(a, scalar);
+
+            let expected_values = vec![3, 6, 9, 12];
+            assert_eq!(c.values, expected_values);
+            assert_eq!(c.rows, 2);
+            assert_eq!(c.cols, 2);
+        }
+
+        // Scalar multiply matrix of f64 type
+        #[test]
+        fn scalar_multiply_matrix_f64() {
+            let a = Matrix::new(2, 2, vec![1.0, 2.0, 3.0, 4.0]).unwrap();
+            let scalar = 3.0;
+
+            let c = Matrix::scalar_multiply(a, scalar);
+
+            let expected_values = vec![3.0, 6.0, 9.0, 12.0];
+            assert_eq!(c.values, expected_values);
+            assert_eq!(c.rows, 2);
+            assert_eq!(c.cols, 2);
         }
     }
 }
