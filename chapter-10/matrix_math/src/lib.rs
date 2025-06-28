@@ -65,7 +65,7 @@ impl<
         let mut new_values = Vec::new();
 
         for (i, a_value) in a.values.iter().enumerate() {
-            // Add the corresponding 'a' and 'b' values and push it to the new_values array
+            // Subtract the corresponding 'a' and 'b' values and push it to the new_values array
             new_values.push(*a_value - b.values[i]);
         }
 
@@ -82,7 +82,7 @@ impl<
         let mut new_values = Vec::new();
 
         for a_value in &a.values {
-            // Add the corresponding 'a' and 'b' values and push it to the new_values array
+            // Multiply the current a value by the given scalar 
             new_values.push(*a_value * scalar);
         }
 
