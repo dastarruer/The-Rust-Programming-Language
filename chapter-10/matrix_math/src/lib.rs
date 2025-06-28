@@ -6,7 +6,14 @@ struct Matrix<T> {
     values: Vec<T>,
 }
 
-impl<T: Clone + Copy + std::ops::Add<Output = T> + std::ops::Sub<Output = T> + std::ops::Mul<Output = T>> Matrix<T> {
+impl<
+    T: Clone
+        + Copy
+        + std::ops::Add<Output = T>
+        + std::ops::Sub<Output = T>
+        + std::ops::Mul<Output = T>,
+> Matrix<T>
+{
     /// Create a new instance of Matrix
     #[allow(dead_code)]
     fn new(rows: i8, cols: i8, values: Vec<T>) -> Result<Matrix<T>, &'static str> {
@@ -222,8 +229,8 @@ mod tests {
         }
     }
 
-     // Subtracting matrices
-     mod subtract_matrix {
+    // Subtracting matrices
+    mod subtract_matrix {
         use crate::Matrix;
 
         // Subtract matrices of i32 type
