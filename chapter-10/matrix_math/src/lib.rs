@@ -6,7 +6,8 @@ struct Matrix<T> {
     values: Vec<T>,
 }
 
-impl<T: Clone + Copy + std::ops::Add<Output = T>> Matrix<T> {
+impl<T: Clone + Copy + std::ops::Add<Output = T> + std::ops::Sub<Output = T>> Matrix<T> {
+    /// Create a new instance of Matrix
     #[allow(dead_code)]
     fn new(rows: i8, cols: i8, values: Vec<T>) -> Result<Matrix<T>, &'static str> {
         // Check if there are more values than there are columns
@@ -24,7 +25,7 @@ impl<T: Clone + Copy + std::ops::Add<Output = T>> Matrix<T> {
         a.rows == b.rows && a.cols == b.cols
     }
 
-    // Add two matrices
+    /// Add two matrices 'a' and 'b' together.
     #[allow(dead_code)]
     fn add(a: Matrix<T>, b: Matrix<T>) -> Result<Matrix<T>, &'static str> {
         // If the matrices are of different dimensions, then they cannot be added
@@ -37,6 +38,28 @@ impl<T: Clone + Copy + std::ops::Add<Output = T>> Matrix<T> {
         for (i, a_value) in a.values.iter().enumerate() {
             // Add the corresponding 'a' and 'b' values and push it to the new_values array
             new_values.push(*a_value + b.values[i]);
+        }
+
+        Ok(Matrix {
+            rows: a.rows,
+            cols: a.cols,
+            values: new_values,
+        })
+    }
+
+    /// Subtract two matrices 'a' and 'b'
+    #[allow(dead_code)]
+    fn subtract(a: Matrix<T>, b: Matrix<T>) -> Result<Matrix<T>, &'static str> {
+        // If the matrices are of different dimensions, then they cannot be multiplied
+        if !Self::is_same_dimensions(&a, &b) {
+            return Err("Cannot subtract matrices: Both matrices are of different dimensions.");
+        }
+
+        let mut new_values = Vec::new();
+
+        for (i, a_value) in a.values.iter().enumerate() {
+            // Add the corresponding 'a' and 'b' values and push it to the new_values array
+            new_values.push(*a_value - b.values[i]);
         }
 
         Ok(Matrix {
@@ -138,7 +161,7 @@ mod tests {
         }
     }
 
-    // Adding matrices
+    // Subtracting matrices
     mod add_matrix {
         use crate::Matrix;
 
@@ -182,6 +205,54 @@ mod tests {
             assert_eq!(
                 error,
                 Err("Cannot add matrices: Both matrices are of different dimensions.")
+            );
+        }
+    }
+
+     // Subtracting matrices
+     mod subtract_matrix {
+        use crate::Matrix;
+
+        // Subtract matrices of i32 type
+        #[test]
+        fn subtract_matrix_i32() {
+            let a = Matrix::new(2, 2, vec![1, 2, 3, 4]).unwrap();
+            let b = Matrix::new(2, 2, vec![5, 3, 2, 1]).unwrap();
+            let c = Matrix::subtract(a, b).unwrap();
+
+            let expected_values = vec![-4, -1, 1, 3];
+            assert_eq!(c.values, expected_values);
+            assert_eq!(c.rows, 2);
+            assert_eq!(c.cols, 2);
+        }
+
+        // SUbtract matrices of f64 type
+        #[test]
+        fn subtract_matrix_f64() {
+            let a = Matrix::new(2, 2, vec![1.0, 2.0, 3.0, 4.0]).unwrap();
+            let b = Matrix::new(2, 2, vec![5.0, 3.0, 2.0, 1.0]).unwrap();
+            let c = Matrix::subtract(a, b).unwrap();
+
+            let expected_values = vec![-4.0, -1.0, 1.0, 3.0];
+            assert_eq!(c.values, expected_values);
+            assert_eq!(c.rows, 2);
+            assert_eq!(c.cols, 2);
+        }
+
+        // subtract matrices of different types
+        #[test]
+        fn subtract_matrix_different_types() {}
+
+        // subtract matrices of different dimensions (invalid)
+        #[test]
+        fn subtract_matrix_invalid() {
+            let a = Matrix::new(2, 3, vec![1.0, 2.0, 3.0, 4.0, 5.0, 6.0]).unwrap();
+            let b = Matrix::new(2, 2, vec![5.0, 3.0, 2.0, 1.0]).unwrap();
+            let error = Matrix::subtract(a, b);
+
+            assert_eq!(
+                error,
+                Err("Cannot subtract matrices: Both matrices are of different dimensions.")
             );
         }
     }
