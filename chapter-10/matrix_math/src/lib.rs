@@ -92,16 +92,6 @@ impl<
             values: new_values,
         }
     }
-
-    /// Mutliply two matrices 'a' and 'b'
-    #[allow(dead_code)]
-    fn multiply(a: Matrix<T>, b: Matrix<T>) -> Result<Matrix<i32>, &'static str> {
-        Ok(Matrix {
-            rows: 1,
-            cols: 1,
-            values: vec![0],
-        })
-    }
 }
 
 #[cfg(test)]
@@ -306,23 +296,6 @@ mod tests {
             let c = Matrix::scalar_multiply(a, scalar);
 
             let expected_values = vec![3.0, 6.0, 9.0, 12.0];
-            assert_eq!(c.values, expected_values);
-            assert_eq!(c.rows, 2);
-            assert_eq!(c.cols, 2);
-        }
-    }
-
-    mod multiply_matrix {
-        use crate::Matrix;
-
-        // Multiply two i32 matrices
-        #[test]
-        fn multiply_matrix_i32() {
-            let a = Matrix::new(2, 3, vec![0, 3, 5, 5, 5, 2]).unwrap();
-            let b = Matrix::new(3, 2, vec![3, 4, 3, -2, 4, -2]).unwrap();
-            let c = Matrix::multiply(a, b).unwrap();
-
-            let expected_values = vec![29, -16, 38, 6];
             assert_eq!(c.values, expected_values);
             assert_eq!(c.rows, 2);
             assert_eq!(c.cols, 2);
