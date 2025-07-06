@@ -39,7 +39,10 @@ mod tests {
     use super::*;
 
     #[test]
-    fn it_works() {
-        assert_eq!(4, 4);
+    fn deref_box() {
+        let value = 16;
+        let my_box = MyBox::new(value);
+
+        assert_eq!(*my_box, value);
     }
 }
