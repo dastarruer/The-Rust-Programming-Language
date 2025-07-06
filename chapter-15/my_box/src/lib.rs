@@ -25,6 +25,10 @@ impl<T> MyBox<T> {
 impl<T> Drop for MyBox<T> {
     fn drop(&mut self) {
         unsafe {
+            // Firstly destroy the value the pointer points to
+            ptr::drop_in_place(self.ptr);
+
+            // Then deallocate the pointer
             dealloc(self.ptr as *mut u8, self.layout);
         }
     }
