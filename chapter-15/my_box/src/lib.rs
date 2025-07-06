@@ -7,7 +7,7 @@ pub struct MyBox<T> {
 }
 
 impl<T> MyBox<T> {
-    fn new(value: T) -> Self {
+    pub fn new(value: T) -> Self {
         unsafe {
             let layout = Layout::new::<T>();
 
