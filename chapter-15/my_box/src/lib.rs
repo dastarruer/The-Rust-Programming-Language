@@ -1,9 +1,10 @@
 use std::alloc::{Layout, alloc, dealloc};
+use std::ops::Deref;
 use std::ptr;
 
 pub struct MyBox<T> {
-    layout: Layout,  // Store this in order to deallocate it later
-    ptr: *mut T, // Store the memory address of the value
+    layout: Layout, // Store this in order to deallocate it later
+    ptr: *mut T,    // Store the memory address of the value
 }
 
 impl<T> MyBox<T> {
@@ -30,6 +31,16 @@ impl<T> Drop for MyBox<T> {
 
             // Then deallocate the pointer
             dealloc(self.ptr as *mut u8, self.layout);
+        }
+    }
+}
+
+impl<T> Deref for MyBox<T> {
+    type Target = T;
+
+    fn deref(&self) -> &T {
+        unsafe {
+            &*self.ptr
         }
     }
 }
