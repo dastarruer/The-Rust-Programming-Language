@@ -1,7 +1,8 @@
-use std::alloc::{Layout, alloc};
+use std::alloc::{Layout, alloc, dealloc};
 use std::ptr;
 
 pub struct MyBox<T> {
+    layout: Layout,  // Store this in order to deallocate it later
     ptr: *mut T, // Store the memory address of the value
 }
 
@@ -16,7 +17,15 @@ impl<T> MyBox<T> {
             // Write the value to the memory address
             ptr::write(ptr, value);
 
-            MyBox { ptr }
+            MyBox { ptr, layout }
+        }
+    }
+}
+
+impl<T> Drop for MyBox<T> {
+    fn drop(&mut self) {
+        unsafe {
+            dealloc(self.ptr as *mut u8, self.layout);
         }
     }
 }
