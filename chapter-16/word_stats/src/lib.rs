@@ -3,7 +3,7 @@ pub struct TextAnalyzer<'a> {
 }
 
 impl<'a> TextAnalyzer<'a> {
-    fn count_words(&self) -> usize {
+    fn get_word_count(&self) -> usize {
         // Check if text is empty
         if self.text.is_empty() {
             return 0;
@@ -11,6 +11,7 @@ impl<'a> TextAnalyzer<'a> {
 
         self.text.split_whitespace().collect::<Vec<_>>().len()
     }
+
 }
 
 #[cfg(test)]
