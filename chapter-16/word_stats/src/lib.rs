@@ -3,18 +3,18 @@ pub struct TextAnalyzer<'a> {
 }
 
 impl<'a> TextAnalyzer<'a> {
-    fn get_word_count(&self) -> usize {
+    fn get_word_count(text: &str) -> usize {
         // Check if text is empty
-        if self.text.is_empty() {
+        if text.is_empty() {
             return 0;
         }
 
-        self.text.split_whitespace().collect::<Vec<&str>>().len()
+        text.split_whitespace().collect::<Vec<&str>>().len()
     }
 
-    fn get_longest_word(&self) -> &str {
+    fn get_longest_word(text: &str) -> &str {
         let mut longest_word: &str = "";
-        for word in self.text.split_whitespace().collect::<Vec<&str>>() {
+        for word in text.split_whitespace().collect::<Vec<&str>>() {
             if word.len() > longest_word.len() {
                 longest_word = word;
             }
@@ -29,36 +29,26 @@ mod tests {
 
     #[test]
     fn test_get_word_count() {
-        let wc = TextAnalyzer {
-            text: "hello world",
-        };
-        assert_eq!(wc.get_word_count(), 2);
+        assert_eq!(TextAnalyzer::get_word_count("hello world"), 2);
     }
 
     #[test]
     fn test_dashes() {
-        let wc = TextAnalyzer {
-            text: "hello-world",
-        };
-        assert_eq!(wc.get_word_count(), 1);
+        assert_eq!(TextAnalyzer::get_word_count("hello-world"), 1);
     }
 
     #[test]
     fn test_empty_string() {
-        let wc = TextAnalyzer { text: "" };
-        assert_eq!(wc.get_word_count(), 0);
+        assert_eq!(TextAnalyzer::get_word_count(""), 0);
     }
 
     #[test]
     fn test_longest_word() {
-        let wc = TextAnalyzer {
-            text: "hello-world",
-        };
-        assert_eq!(wc.get_longest_word(), "hello-world");
+        assert_eq!(TextAnalyzer::get_longest_word("hello-world"), "hello-world");
 
-        let wc = TextAnalyzer {
-            text: "catastrophe hello there when alskdfjalsdkfjalksdfj",
-        };
-        assert_eq!(wc.get_longest_word(), "alskdfjalsdkfjalksdfj");
+        assert_eq!(
+            TextAnalyzer::get_longest_word("catastrophe hello there when alskdfjalsdkfjalksdfj"),
+            "alskdfjalsdkfjalksdfj"
+        );
     }
 }
