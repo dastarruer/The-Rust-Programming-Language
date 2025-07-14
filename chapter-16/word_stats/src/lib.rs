@@ -3,6 +3,7 @@ pub struct TextAnalyzer<'a> {
 }
 
 impl<'a> TextAnalyzer<'a> {
+    /// Return the word count of a given &str
     fn get_word_count(text: &str) -> usize {
         // Check if text is empty
         if text.is_empty() {
@@ -12,6 +13,7 @@ impl<'a> TextAnalyzer<'a> {
         text.split_whitespace().collect::<Vec<&str>>().len()
     }
 
+    /// Return the longest word of a given &str
     fn get_longest_word(text: &str) -> &str {
         let mut longest_word: &str = "";
         for word in text.split_whitespace().collect::<Vec<&str>>() {
