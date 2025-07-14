@@ -1,8 +1,8 @@
-pub struct WordCounter<'a> {
+pub struct TextAnalyzer<'a> {
     text: &'a str,
 }
 
-impl<'a> WordCounter<'a> {
+impl<'a> TextAnalyzer<'a> {
     fn count_words(&self) -> usize {
         // Check if text is empty
         if self.text.is_empty() {
@@ -19,7 +19,7 @@ mod tests {
 
     #[test]
     fn test_count_words() {
-        let wc = WordCounter {
+        let wc = TextAnalyzer {
             text: "hello world",
         };
         assert_eq!(wc.count_words(), 2);
@@ -27,7 +27,7 @@ mod tests {
 
     #[test]
     fn test_dashes() {
-        let wc = WordCounter {
+        let wc = TextAnalyzer {
             text: "hello-world",
         };
         assert_eq!(wc.count_words(), 1);
@@ -35,7 +35,7 @@ mod tests {
 
     #[test]
     fn test_empty_string() {
-        let wc = WordCounter { text: "" };
+        let wc = TextAnalyzer { text: "" };
         assert_eq!(wc.count_words(), 0);
     }
 }
