@@ -1,16 +1,28 @@
+use std::sync::{Arc, Mutex};
 use std::thread;
-use std::time::Duration;
 
 fn main() {
-    thread::spawn(|| {
-        for i in 1..10 {
-            println!("hi number {} from spawned thread!", i);
-            thread::sleep(Duration::from_millis(1));
-        }
-    });
+    // Create a new Arc so this Mutex can be shared across threads
+    let counter = Arc::new(Mutex::new(0));
+    let mut handles = vec![];
 
-    for i in 1..5 {
-        println!("hi number {} from main thread!", i);
-        thread::sleep(Duration::from_millis(1));
+    for _ in 0..10 {
+        // Create a new reference to counter
+        let counter = Arc::clone(&counter);
+        let handle = thread::spawn(move || {
+            // Unlock the mutex
+            let mut num = counter.lock().unwrap();
+
+            // Add one to the value inside the mutex
+            *num += 1;
+        });
+        handles.push(handle);
     }
+
+    // Block main thread until all threads are finished; without this undefined behavior can occur
+    for handle in handles {
+        handle.join().unwrap();
+    }
+
+    println!("Result: {}", *counter.lock().unwrap());
 }
