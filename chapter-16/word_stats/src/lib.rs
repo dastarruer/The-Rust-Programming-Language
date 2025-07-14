@@ -3,20 +3,13 @@ pub struct WordCounter<'a> {
 }
 
 impl<'a> WordCounter<'a> {
-    fn count_words(&self) -> i32 {
+    fn count_words(&self) -> usize {
         // Check if text is empty
         if self.text.is_empty() {
             return 0;
         }
 
-        let mut counter = 1;
-        for c in self.text.chars() {
-            if c == ' ' {
-                counter += 1;
-            }
-        }
-
-        counter
+        self.text.split_whitespace().collect::<Vec<_>>().len()
     }
 }
 
