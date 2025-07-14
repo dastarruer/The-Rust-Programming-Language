@@ -16,6 +16,20 @@ impl<'a> TextAnalyzer<'a> {
         )
     }
 
+    /// Strip non alphabetic chars from a given &str
+    fn remove_punctuation(text: &str) -> String {
+        let unwanted_chars = r#"!@#$%^&*()-=_+`~,./;#'[]{}:"<>?"#;
+        let mut new_text = String::new();
+
+        // Filter out punctuation
+        for char in text.chars() {
+            if !unwanted_chars.contains(char) {
+                new_text.push(char);
+            }
+        }
+        new_text
+    }
+
     /// Return the word count of a given &str
     fn get_word_count(text: &str) -> usize {
         // Check if text is empty
@@ -56,6 +70,15 @@ mod tests {
         Word count: 2
         Longest word: worlds"
             )
+        }
+    }
+
+    mod remove_punctuation {
+        use super::super::*;
+
+        #[test]
+        fn test_remove_punctuation() {
+            assert_eq!(TextAnalyzer::remove_punctuation("Hello, world!"), String::from("Hello world"));
         }
     }
 
