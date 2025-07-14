@@ -16,17 +16,15 @@ impl<'a> TextAnalyzer<'a> {
         )
     }
 
-    /// Strip non alphabetic chars from a given &str
-    fn remove_punctuation(text: &str) -> String {
+    /// Strip non alphabetic chars and convert all chars to lowercase
+    fn process_text(text: &str) -> String {
         let unwanted_chars = r#"!@#$%^&*()-=_+`~,./;#'[]{}:"<>?"#;
-        let mut new_text = String::new();
+        // Convert text to lowercase
+        let mut new_text = text.to_lowercase();
 
-        // Filter out punctuation
-        for char in text.chars() {
-            if !unwanted_chars.contains(char) {
-                new_text.push(char);
-            }
-        }
+        // Remove unwanted chars
+        new_text.retain(|c| !unwanted_chars.contains(c));
+
         new_text
     }
 
@@ -78,7 +76,10 @@ mod tests {
 
         #[test]
         fn test_remove_punctuation() {
-            assert_eq!(TextAnalyzer::remove_punctuation("Hello, world!"), String::from("Hello world"));
+            assert_eq!(
+                TextAnalyzer::remove_punctuation("Hello, world!"),
+                String::from("hello world")
+            );
         }
     }
 
