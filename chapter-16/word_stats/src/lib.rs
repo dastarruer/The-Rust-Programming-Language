@@ -5,8 +5,9 @@ pub struct TextAnalyzer<'a> {
 impl<'a> TextAnalyzer<'a> {
     /// Return the stats of a given &str
     fn get_word_stats(&self) -> String {
-        let word_count = TextAnalyzer::get_word_count(self.text);
-        let longest_word = TextAnalyzer::get_longest_word(self.text);
+        let text = TextAnalyzer::process_text(self.text);
+        let word_count = TextAnalyzer::get_word_count(text.clone());
+        let longest_word = TextAnalyzer::get_longest_word(text);
 
         format!(
             r"Stats:
@@ -29,7 +30,7 @@ impl<'a> TextAnalyzer<'a> {
     }
 
     /// Return the word count of a given &str
-    fn get_word_count(text: &str) -> usize {
+    fn get_word_count(text: String) -> usize {
         // Check if text is empty
         if text.is_empty() {
             return 0;
@@ -39,14 +40,14 @@ impl<'a> TextAnalyzer<'a> {
     }
 
     /// Return the longest word of a given &str
-    fn get_longest_word(text: &str) -> &str {
+    fn get_longest_word(text: String) -> String {
         let mut longest_word: &str = "";
         for word in text.split_whitespace().collect::<Vec<&str>>() {
             if word.len() > longest_word.len() {
                 longest_word = word;
             }
         }
-        longest_word
+        longest_word.to_string()
     }
 }
 
@@ -93,17 +94,17 @@ mod tests {
 
         #[test]
         fn test_get_word_count() {
-            assert_eq!(TextAnalyzer::get_word_count("hello world"), 2);
+            assert_eq!(TextAnalyzer::get_word_count("hello world".to_string()), 2);
         }
 
         #[test]
         fn test_dashes() {
-            assert_eq!(TextAnalyzer::get_word_count("hello-world"), 1);
+            assert_eq!(TextAnalyzer::get_word_count("hello-world".to_string()), 1);
         }
 
         #[test]
         fn test_empty_string() {
-            assert_eq!(TextAnalyzer::get_word_count(""), 0);
+            assert_eq!(TextAnalyzer::get_word_count("".to_string()), 0);
         }
     }
 
@@ -112,13 +113,16 @@ mod tests {
 
         #[test]
         fn test_longest_word() {
-            assert_eq!(TextAnalyzer::get_longest_word("hello-world"), "hello-world");
+            assert_eq!(
+                TextAnalyzer::get_longest_word("hello-world".to_string()),
+                "hello-world".to_string()
+            );
 
             assert_eq!(
                 TextAnalyzer::get_longest_word(
-                    "catastrophe hello there when alskdfjalsdkfjalksdfj"
+                    "catastrophe hello there when alskdfjalsdkfjalksdfj".to_string()
                 ),
-                "alskdfjalsdkfjalksdfj"
+                "alskdfjalsdkfjalksdfj".to_string()
             );
         }
     }
