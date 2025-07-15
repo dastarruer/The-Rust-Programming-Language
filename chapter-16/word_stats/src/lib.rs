@@ -20,6 +20,7 @@ impl<'a> TextAnalyzer<'a> {
     /// Strip non alphabetic chars and convert all chars to lowercase
     fn process_text(text: &str) -> String {
         let unwanted_chars = r#"!@#$%^&*()=_+`~,./;#'[]{}:"<>?"#;
+
         // Convert text to lowercase
         let mut new_text = text.to_lowercase();
 
@@ -53,7 +54,6 @@ impl<'a> TextAnalyzer<'a> {
 
 #[cfg(test)]
 mod tests {
-
     mod word_stats {
         use super::super::*;
 
@@ -68,7 +68,29 @@ mod tests {
                 r"Stats:
         Word count: 2
         Longest word: worlds"
-            )
+            );
+
+            let text = TextAnalyzer {
+                text: "Hello worl",
+            };
+
+            assert_eq!(
+                text.get_word_stats(),
+                r"Stats:
+        Word count: 2
+        Longest word: hello"
+            );
+
+            let text = TextAnalyzer {
+                text: "Hello world!",
+            };
+
+            assert_eq!(
+                text.get_word_stats(),
+                r"Stats:
+        Word count: 2
+        Longest word: hello"
+            );
         }
     }
 
