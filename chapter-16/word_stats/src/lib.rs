@@ -1,3 +1,5 @@
+use std::sync::mpsc;
+
 use std::thread;
 
 pub struct TextAnalyzer<'a> {
@@ -12,13 +14,22 @@ impl<'a> TextAnalyzer<'a> {
 
         // Each chunk will hold a part of the text
         let num_chunks = 4;
-        let chunk_len = text.len() / num_chunks;
+        let chunk_size = text.len() / num_chunks;
 
-        let handles = Vec::new();
-        for i in 0..num_chunks {
+        // Chunk the text into multiple Vec<String>'s
+        let chunks: Vec<Vec<String>> = text
+            .chunks(chunk_size)
+            .map(|chunk| chunk.to_vec())
+            .collect();
+
+        let mut handles = Vec::new();
+        let (tx, rx) = mpsc::channel::<usize>();
+
+        for chunk in chunks {
+            // Spawn a thread to handle each chunk
             let handle = thread::spawn(|| {
-                let word_count = TextAnalyzer::get_word_count(text.clone());
-                let longest_word = TextAnalyzer::get_longest_word(text);
+                let longest_word = TextAnalyzer::get_longest_word(chunk.clone());
+                let word_count = TextAnalyzer::get_word_count(chunk);
             });
 
             handles.push(handle);
@@ -33,7 +44,7 @@ impl<'a> TextAnalyzer<'a> {
             r"Stats:
         Word count: {}
         Longest word: {}",
-            word_count, longest_word
+            2, "hello"
         )
     }
 
