@@ -3,12 +3,12 @@ use std::sync::mpsc;
 use std::thread;
 
 pub struct TextAnalyzer<'a> {
-    text: &'a str,
+    pub text: &'a str,
 }
 
 impl<'a> TextAnalyzer<'a> {
     /// Return the stats of a given &str
-    fn get_word_stats(&self) -> String {
+    pub fn get_word_stats(&self) -> String {
         // Convert all letters to lowercase and remove punctuation
         let text = TextAnalyzer::process_text(self.text);
 
