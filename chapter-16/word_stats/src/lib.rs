@@ -70,9 +70,7 @@ mod tests {
         Longest word: worlds"
             );
 
-            let text = TextAnalyzer {
-                text: "Hello worl",
-            };
+            let text = TextAnalyzer { text: "Hello worl" };
 
             assert_eq!(
                 text.get_word_stats(),
