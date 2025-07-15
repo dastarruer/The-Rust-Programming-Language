@@ -14,7 +14,9 @@ impl<'a> TextAnalyzer<'a> {
 
         // Each chunk will hold a part of the text
         let num_chunks = 4;
-        let chunk_size = text.len() / num_chunks;
+
+        // Clamp chunk size to be at least 1 to avoid errors
+        let chunk_size = (text.len() / num_chunks).max(1);
 
         // Chunk the text into multiple Vec<String>'s
         let chunks: Vec<Vec<String>> = text
@@ -23,16 +25,46 @@ impl<'a> TextAnalyzer<'a> {
             .collect();
 
         let mut handles = Vec::new();
-        let (tx, rx) = mpsc::channel::<usize>();
+
+        // Channel for word count
+        let (word_count_tx, word_count_rx) = mpsc::channel::<usize>();
+
+        // Channel for longest word
+        let (longest_word_tx, longest_word_rx) = mpsc::channel::<String>();
 
         for chunk in chunks {
+            // Clone the transmitters so the originals do not get moved into the closure
+            let word_count_tx = mpsc::Sender::clone(&word_count_tx);
+            let longest_word_tx = mpsc::Sender::clone(&longest_word_tx);
+
             // Spawn a thread to handle each chunk
-            let handle = thread::spawn(|| {
+            let handle = thread::spawn(move || {
                 let longest_word = TextAnalyzer::get_longest_word(chunk.clone());
+                longest_word_tx.send(longest_word).unwrap();
+
                 let word_count = TextAnalyzer::get_word_count(chunk);
+                word_count_tx.send(word_count).unwrap();
             });
 
             handles.push(handle);
+        }
+
+        // Drop the transmitters so that the program does not hang
+        drop(word_count_tx);
+        drop(longest_word_tx);
+
+        // Get the longest word
+        let mut longest_word = String::new();
+        for word in longest_word_rx {
+            if word.len() > longest_word.len() {
+                longest_word = word;
+            }
+        }
+
+        // Add up the word count from each thread
+        let mut total_word_count = 0;
+        for word_count in word_count_rx {
+            total_word_count += word_count;
         }
 
         // Wait until all threads have finished
@@ -44,7 +76,7 @@ impl<'a> TextAnalyzer<'a> {
             r"Stats:
         Word count: {}
         Longest word: {}",
-            2, "hello"
+            total_word_count, longest_word
         )
     }
 
