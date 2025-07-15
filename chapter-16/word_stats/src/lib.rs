@@ -1,3 +1,5 @@
+use std::thread;
+
 pub struct TextAnalyzer<'a> {
     text: &'a str,
 }
@@ -5,9 +7,27 @@ pub struct TextAnalyzer<'a> {
 impl<'a> TextAnalyzer<'a> {
     /// Return the stats of a given &str
     fn get_word_stats(&self) -> String {
+        // Convert all letters to lowercase and remove punctuation
         let text = TextAnalyzer::process_text(self.text);
-        let word_count = TextAnalyzer::get_word_count(text.clone());
-        let longest_word = TextAnalyzer::get_longest_word(text);
+
+        // Each chunk will hold a part of the text
+        let num_chunks = 4;
+        let chunk_len = text.len() / num_chunks;
+
+        let handles = Vec::new();
+        for i in 0..num_chunks {
+            let handle = thread::spawn(|| {
+                let word_count = TextAnalyzer::get_word_count(text.clone());
+                let longest_word = TextAnalyzer::get_longest_word(text);
+            });
+
+            handles.push(handle);
+        }
+
+        // Wait until all threads have finished
+        for handle in handles {
+            handle.join().unwrap();
+        }
 
         format!(
             r"Stats:
@@ -18,7 +38,7 @@ impl<'a> TextAnalyzer<'a> {
     }
 
     /// Strip non alphabetic chars and convert all chars to lowercase
-    fn process_text(text: &str) -> String {
+    fn process_text(text: &str) -> Vec<String> {
         let unwanted_chars = r#"!@#$%^&*()=_+`~,./;#'[]{}:"<>?"#;
 
         // Convert text to lowercase
@@ -27,27 +47,26 @@ impl<'a> TextAnalyzer<'a> {
         // Remove unwanted chars
         new_text.retain(|c| !unwanted_chars.contains(c));
 
-        new_text
+        // Split text by whitespace for easier chunking later on
+        new_text.split_whitespace().map(String::from).collect()
     }
 
     /// Return the word count of a given &str
-    fn get_word_count(text: String) -> usize {
-        // Check if text is empty
-        if text.is_empty() {
-            return 0;
-        }
-
-        text.split_whitespace().collect::<Vec<&str>>().len()
+    fn get_word_count(text: Vec<String>) -> usize {
+        // The length of the vector will equal the number of words
+        text.len()
     }
 
     /// Return the longest word of a given &str
-    fn get_longest_word(text: String) -> String {
-        let mut longest_word: &str = "";
-        for word in text.split_whitespace().collect::<Vec<&str>>() {
+    fn get_longest_word(text: Vec<String>) -> String {
+        let mut longest_word = String::new();
+
+        for word in text {
             if word.len() > longest_word.len() {
                 longest_word = word;
             }
         }
+
         longest_word.to_string()
     }
 }
@@ -99,12 +118,12 @@ mod tests {
         fn test_process_text() {
             assert_eq!(
                 TextAnalyzer::process_text("Hello, world!"),
-                String::from("hello world")
+                vec!["hello".to_string(), "world".to_string()]
             );
 
             assert_eq!(
                 TextAnalyzer::process_text("hello-world"),
-                String::from("hello-world")
+                vec!["hello-world".to_string()]
             );
         }
     }
@@ -114,34 +133,44 @@ mod tests {
 
         #[test]
         fn test_get_word_count() {
-            assert_eq!(TextAnalyzer::get_word_count("hello world".to_string()), 2);
+            assert_eq!(
+                TextAnalyzer::get_word_count(vec!["hello".to_string(), "world".to_string()]),
+                2
+            );
         }
 
         #[test]
         fn test_dashes() {
-            assert_eq!(TextAnalyzer::get_word_count("hello-world".to_string()), 1);
+            let input = vec!["hello-world".to_string()];
+            assert_eq!(TextAnalyzer::get_word_count(input), 1);
         }
 
         #[test]
         fn test_empty_string() {
-            assert_eq!(TextAnalyzer::get_word_count("".to_string()), 0);
+            let input: Vec<String> = vec![];
+            assert_eq!(TextAnalyzer::get_word_count(input), 0);
         }
     }
-
     mod longest_word {
         use super::super::*;
 
         #[test]
         fn test_longest_word() {
+            let input = vec!["hello-world".to_string()];
             assert_eq!(
-                TextAnalyzer::get_longest_word("hello-world".to_string()),
+                TextAnalyzer::get_longest_word(input),
                 "hello-world".to_string()
             );
 
+            let input = vec![
+                "catastrophe".to_string(),
+                "hello".to_string(),
+                "there".to_string(),
+                "when".to_string(),
+                "alskdfjalsdkfjalksdfj".to_string(),
+            ];
             assert_eq!(
-                TextAnalyzer::get_longest_word(
-                    "catastrophe hello there when alskdfjalsdkfjalksdfj".to_string()
-                ),
+                TextAnalyzer::get_longest_word(input),
                 "alskdfjalsdkfjalksdfj".to_string()
             );
         }
