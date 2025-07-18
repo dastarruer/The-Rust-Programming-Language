@@ -8,6 +8,11 @@ impl Light {
             state: Some(Box::new(Red {})),
         }
     }
+
+    pub fn change_light(&mut self) {
+        let current_state = self.state.take().unwrap();
+        self.state = Some(current_state.change_light());
+    }
 }
 
 trait State {
