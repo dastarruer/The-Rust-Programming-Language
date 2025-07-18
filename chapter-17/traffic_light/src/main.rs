@@ -22,19 +22,22 @@ struct Yellow {}
 
 impl State for Red {
     fn change_light(self: Box<Self>) -> Box<dyn State> {
+        println!("Switched from red to green.");
         Box::new(Green {})
     }
 }
 
 impl State for Green {
     fn change_light(self: Box<Self>) -> Box<dyn State> {
-         Box::new(Yellow {})
+        println!("Switched from green to yellow.");
+        Box::new(Yellow {})
     }
 }
 
 impl State for Yellow {
     fn change_light(self: Box<Self>) -> Box<dyn State> {
-         Box::new(Red {})
+        println!("Switched from yellow to red.");
+        Box::new(Red {})
     }
 }
 
