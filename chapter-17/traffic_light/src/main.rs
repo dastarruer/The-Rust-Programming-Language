@@ -1,3 +1,4 @@
+#[derive(Debug)]
 pub struct Light {
     state: Option<Box<dyn State>>,
 }
@@ -15,14 +16,18 @@ impl Light {
     }
 }
 
-trait State {
+// this is the only way to implement Debug for all these objects and i dont know why.
+trait State: std::fmt::Debug {
     fn change_light(self: Box<Self>) -> Box<dyn State>;
 }
 
+#[derive(Debug)]
 struct Red {}
 
+#[derive(Debug)]
 struct Green {}
 
+#[derive(Debug)]
 struct Yellow {}
 
 impl State for Red {
@@ -47,5 +52,6 @@ impl State for Yellow {
 }
 
 fn main() {
-    println!("Hello, world!");
+    let light = Light::new();
+    println!("Created new Light: {:?}", light);
 }
