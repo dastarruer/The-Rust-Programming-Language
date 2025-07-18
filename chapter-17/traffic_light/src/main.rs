@@ -52,6 +52,12 @@ impl State for Yellow {
 }
 
 fn main() {
-    let light = Light::new();
-    println!("Created new Light: {:?}", light);
+    let mut light = Light::new();
+    println!("Created new Light: {:?}\n", light);
+
+    for i in 1..4 {
+        light.change_light();
+        println!("Changed light: {:?}\n", light);
+    }
+
 }
