@@ -26,32 +26,25 @@ fn handle_connection(mut stream: TcpStream) {
     let get = b"GET / HTTP/1.1\r\n";
 
     // If the request is a GET request
-    if buffer.starts_with(get) {
-        // Open the html file
-        let mut file = File::open("hello.html").unwrap();
-
-        // Read the contents of the html into `contents`
-        let mut contents = String::new();
-        file.read_to_string(&mut contents).unwrap();
-
-        // Append the html to the response
-        let response = format!("HTTP/1.1 200 OK\r\n\r\n{}", contents);
-
-        // Send the response
-        stream.write(response.as_bytes()).unwrap();
-
-        // Prevent the program from continuing until all bytes are sent
-        stream.flush().unwrap();
+    let (status_line, filename) = if buffer.starts_with(get) {
+        ("HTTP/1.1 200 OK\r\n\r\n", "hello.html")
     } else {
-        let status_line = "HTTP/1.1 404 NOT FOUND\r\n\r\n";
-        let mut file = File::open("404.html").unwrap();
+        ("HTTP/1.1 404 NOT FOUND\r\n\r\n", "404.html")
+    };
 
-        let mut contents = String::new();
-        file.read_to_string(&mut contents).unwrap();
+    // Open the html file
+    let mut file = File::open(filename).unwrap();
 
-        let response = format!("{}{}", status_line, contents);
+    // Read the contents of the html into `contents`
+    let mut contents = String::new();
+    file.read_to_string(&mut contents).unwrap();
 
-        stream.write(response.as_bytes()).unwrap();
-        stream.flush().unwrap();
-    }
+    // Append the html to the response
+    let response = format!("{}{}", status_line, contents);
+
+    // Send the response
+    stream.write(response.as_bytes()).unwrap();
+
+    // Prevent the program from continuing until all bytes are sent
+    stream.flush().unwrap();
 }
