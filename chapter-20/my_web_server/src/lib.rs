@@ -30,6 +30,13 @@ impl ThreadPool {
 
         ThreadPool { workers }
     }
+
+    /// Dispatch a job to be executed by `ThreadPool`.
+    pub fn execute<F>(&self, _job: F)
+    where
+        F: FnOnce(), // `F` is a closure that will consume all values
+    {
+    }
 }
 
 /// An implementation of a 'worker' intended to be used in `ThreadPool`.
