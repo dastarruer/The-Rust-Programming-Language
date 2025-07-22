@@ -59,3 +59,15 @@ impl Worker {
         Worker { id, thread }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    #[should_panic]
+    fn test_thread_pool_panics() {
+        // Should panic because ThreadPool cannot take 0 threads
+        let thread_pool = ThreadPool::new(0);
+    }
+}
