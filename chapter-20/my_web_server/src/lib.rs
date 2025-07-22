@@ -72,10 +72,7 @@ impl Worker {
     /// - `id` - A unique id to identify each `Worker`.
     /// - `receiver` - The receiving end of the channel that is used to send
     /// jobs to the worker
-    fn new<F>(id: usize, receiver: Arc<Mutex<Receiver<F>>>) -> Worker
-    where
-        F: FnOnce() + Send + 'static,
-    {
+    fn new(id: usize, receiver: Arc<Mutex<Receiver<Job>>>) -> Worker {
         let thread = thread::spawn(|| {
             receiver;
         });
