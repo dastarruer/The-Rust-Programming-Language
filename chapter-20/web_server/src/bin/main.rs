@@ -1,3 +1,6 @@
+extern crate web_server;
+use web_server::ThreadPool;
+
 use std::fs::File;
 use std::io::prelude::*;
 use std::net::TcpListener;
@@ -9,12 +12,17 @@ fn main() {
     // Create a new TcpListener (note that 'bind' here means connecting to a port, or binding to a port)
     let listener = TcpListener::bind("127.0.0.1:7878").unwrap(); // Binding to a port can return an error, since some ports require admin priviliges, sometimes there could be more than one tcp connection at one port, etc.
 
+    // Create a thread pool; by limiting the number of threads available we minimize the risk of overwhelming our system with unlimited threads
+    let pool = ThreadPool::new(4);
+
     // Loop through each stream in the TCP connection (each stream is an open connection between client and server)
     for stream in listener.incoming() {
         // Can return an error when stream isn't an actual stream, but a connection attempt
         let stream = stream.unwrap();
 
-        handle_connection(stream);
+        pool.execute(|| {
+            handle_connection(stream);
+        });
     }
 }
 
