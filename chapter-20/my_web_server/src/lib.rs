@@ -1,8 +1,7 @@
-use core::num;
 use std::{
     sync::{
         Arc, Mutex,
-        mpsc::{self, Receiver},
+        mpsc::{self, Receiver, Sender},
     },
     thread,
 };
@@ -16,6 +15,7 @@ type Job = Box<dyn FnOnce() + Send + 'static>;
 /// for code to be given to them and executed.
 pub struct ThreadPool {
     workers: Vec<Worker>,
+    sender: Sender<Job>,
 }
 
 impl ThreadPool {
@@ -45,7 +45,7 @@ impl ThreadPool {
             workers.push(Worker::new(id, Arc::clone(&receiver)));
         }
 
-        ThreadPool { workers }
+        ThreadPool { workers, sender }
     }
 
     /// Dispatch a job to be executed by `ThreadPool`.
