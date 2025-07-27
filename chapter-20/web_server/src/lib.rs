@@ -1,7 +1,6 @@
 use std::sync::{Arc, Mutex, mpsc};
 use std::thread;
 use std::thread::JoinHandle;
-use std::time::Duration;
 
 struct Worker {
     id: usize,

@@ -49,10 +49,11 @@ impl ThreadPool {
     }
 
     /// Dispatch a job to be executed by `ThreadPool`.
-    pub fn execute<F>(&self, _job: F)
+    pub fn execute<F>(&self, job: F)
     where
-        F: FnOnce(), // `F` is a closure that will consume all values
+        F: FnOnce() + Send + 'static, // `F` is a closure that will consume all values
     {
+        self.sender.send(Box::new(job)).unwrap();
     }
 }
 
@@ -73,8 +74,15 @@ impl Worker {
     /// - `receiver` - The receiving end of the channel that is used to send
     /// jobs to the worker
     fn new(id: usize, receiver: Arc<Mutex<Receiver<Job>>>) -> Worker {
-        let thread = thread::spawn(|| {
-            receiver;
+        let thread = thread::spawn(move || {
+            loop {
+                // Block thread until value is received
+                let job = receiver.lock().unwrap().recv().unwrap();
+
+                println!("Worker {} received job, executing...", id);
+                job();
+                println!("Worker {} finished job.", id);
+            }
         });
 
         Worker { id, thread }

@@ -10,7 +10,7 @@ use std::time::Duration;
 
 fn main() {
     // Create a new TcpListener (note that 'bind' here means connecting to a port, or binding to a port)
-    let listener = TcpListener::bind("127.0.0.1:7878").unwrap(); // Binding to a port can return an error, since some ports require admin priviliges, sometimes there could be more than one tcp connection at one port, etc.
+    let listener = TcpListener::bind("127.0.0.1:8080").unwrap(); // Binding to a port can return an error, since some ports require admin priviliges, sometimes there could be more than one tcp connection at one port, etc.
 
     // Create a thread pool; by limiting the number of threads available we minimize the risk of overwhelming our system with unlimited threads
     let pool = ThreadPool::new(4);
